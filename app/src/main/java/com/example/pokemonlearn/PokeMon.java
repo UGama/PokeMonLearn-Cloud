@@ -15,7 +15,8 @@ public class PokeMon {
 
     public PokeMon() {}
 
-    public PokeMon(int Number, String Name, String imageName2, int Weight, String imageName, String senior) {
+    public PokeMon(String Id, int Number, String Name, String imageName2, int Weight, String imageName, String senior) {
+        this.Id = Id;
         this.Number = Number;
         this.Name = Name;
         this.ImageName2 = imageName2;

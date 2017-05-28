@@ -3,13 +3,7 @@ package com.example.pokemonlearn;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-
-import com.avos.avoscloud.AVObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.ImageView;
 
 /**
  * Created by Gama on 8/3/17 (Test Version) (Happy Birthday, Cloud!).
@@ -24,30 +18,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int a;
+    private ImageView test;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                List<PokeMonBook> list = new ArrayList<>();
-                PokeMonBook p3 = new PokeMonBook("水之秘籍", "skill_water", 3, 1000);
-
-                list.add(p3);
-
-                for (PokeMonBook pokeMonBook : list) {
-                    AVObject avObject = new AVObject("PokeMonBook");
-                    avObject.put("Name", pokeMonBook.getName());
-                    avObject.put("ImageName", pokeMonBook.getImageName());
-                    avObject.put("Number", pokeMonBook.getNumber());
-                    avObject.put("Price", pokeMonBook.getPrice());
-                    avObject.saveInBackground();
-                }
-            }
-        });
 
     }
 }

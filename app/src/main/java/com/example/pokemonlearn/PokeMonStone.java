@@ -13,7 +13,8 @@ public class PokeMonStone {
 
     public PokeMonStone() {}
 
-    public PokeMonStone(String name, String imageName, int number, int price) {
+    public PokeMonStone(String Id, String name, String imageName, int number, int price) {
+        this.Id = Id;
         this.Name = name;
         this.ImageName = imageName;
         this.Number = number;

@@ -14,7 +14,8 @@ public class PokeMonBall {
 
     public PokeMonBall() {}
 
-    public PokeMonBall(String Name, String ImageName, int Number, Double rate, int price) {
+    public PokeMonBall(String Id, String Name, String ImageName, int Number, Double rate, int price) {
+        this.Id = Id;
         this.Name = Name;
         this.ImageName = ImageName;
         this.rate = rate;

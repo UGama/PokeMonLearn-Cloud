@@ -5,6 +5,7 @@ package com.example.pokemonlearn;
  */
 
 public class PokeMonBook {
+    private String Id;
     private String Name;
     private String ImageName;
     private int Number;
@@ -12,7 +13,8 @@ public class PokeMonBook {
 
     public PokeMonBook() {}
 
-    public PokeMonBook(String name, String ImageName, int number, int Price) {
+    public PokeMonBook(String Id, String name, String ImageName, int number, int Price) {
+        this.Id = Id;
         this.Name = name;
         this.ImageName = ImageName;
         this.Number = number;
