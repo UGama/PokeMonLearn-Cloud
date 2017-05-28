@@ -15,7 +15,7 @@ public class MyLeanCloudApp extends Application {
         super.onCreate();
 
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"DL8EN0L4Wx0AYr53cyWQKdN7-gzGzoHsz","RlRIdwye4YEihV6NDV0KdnJE");
+        AVOSCloud.initialize(this,"vuVTAFSIycc7XPJxLXLGCnTv-gzGzoHsz","YQwRAndPNiRlHSvjIqYMwAPL");
         AVOSCloud.setDebugLogEnabled(true);
     }
 }
