@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/pokeDex_Layout_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu"
+        app:layout_heightPercent="70%">
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/choseList"
+            android:background="@drawable/pokedex_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_widthPercent="40%"
+            app:layout_heightPercent="55%"
+            app:layout_marginTopPercent="5%"
+            app:layout_marginLeftPercent="3%"
+            >
+
+            <ImageView
+                android:id="@+id/wanted"
+                android:background="@drawable/pokedex_shape2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_widthPercent="84%"
+                app:layout_heightPercent="90%"
+                app:layout_marginTopPercent="5%"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:id="@+id/wood_name"
+                android:text=" ??? "
+                android:textColor="#4c3a27"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_marginTopPercent="68%"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <ImageView
+                android:background="@drawable/pokedexinit"
+                android:id="@+id/pokeDex_Pic"
+                app:layout_widthPercent="70%"
+                app:layout_heightPercent="45%"
+                app:layout_marginTopPercent="20%"
+                android:layout_centerHorizontal="true"
+                />
+        </android.support.percent.PercentRelativeLayout>
+
+        <ImageView
+            android:id="@+id/Dex"
+            android:background="@drawable/pokedex_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_widthPercent="50%"
+            app:layout_heightPercent="95%"
+            android:layout_alignParentRight="true"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_widthPercent="44%"
+            app:layout_heightPercent="83%"
+            app:layout_marginRightPercent="3%"
+            app:layout_marginTopPercent="6%"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp" />
+        <ImageView
+            android:id="@+id/gold_up"
+            android:src="#f8e08a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_heightPercent="3%"
+            app:layout_widthPercent="44%"
+            android:layout_alignParentRight="true"
+            app:layout_marginRightPercent="3%"
+            app:layout_marginTopPercent="3%"
+            />
+        <ImageView
+            android:id="@+id/gold_down"
+            android:src="#f8e08a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_heightPercent="3%"
+            app:layout_widthPercent="44%"
+            android:layout_alignParentRight="true"
+            app:layout_marginRightPercent="3%"
+            android:layout_below="@+id/RecyclerView"
+            />
+        <ImageView
+            android:id="@+id/pokeDex_decorate"
+            android:background="@drawable/pokedex_decorate"
+            android:layout_alignParentBottom="true"
+            app:layout_widthPercent="18%"
+            app:layout_heightPercent="16%"
+            android:layout_alignParentRight="true"
+            app:layout_marginRightPercent="16%"
+            app:layout_marginBottomPercent="3%"
+            />
+        <ImageView
+            android:id="@+id/computer"
+            android:src="@drawable/computer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_widthPercent="35%"
+            app:layout_heightPercent="30%"
+            android:layout_alignParentBottom="true"
+            app:layout_marginBottomPercent="5%"
+            app:layout_marginLeftPercent="5%"
+            />
+
+        <ImageView
+            android:id="@+id/flash2"
+            android:background="#000000"
+            app:layout_widthPercent="29%"
+            app:layout_heightPercent="15.5%"
+            android:layout_alignParentBottom="true"
+            app:layout_marginBottomPercent="18%"
+            app:layout_marginLeftPercent="8%"
+            />
+        <ImageView
+            android:id="@+id/connect1"
+            android:background="#f8e08a"
+            app:layout_widthPercent="4%"
+            app:layout_heightPercent="7%"
+            app:layout_marginTopPercent="58%"
+            app:layout_marginLeftPercent="20%"
+            />
+        <ImageView
+            android:id="@+id/connect2"
+            android:background="#f8e08a"
+            app:layout_widthPercent="8%"
+            app:layout_heightPercent="4%"
+            app:layout_marginTopPercent="30%"
+            app:layout_marginLeftPercent="43%"
+            />
+
+
+
+
+    </android.support.percent.PercentRelativeLayout>
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/pokeDex_Layout_down"
+        android:background="@drawable/shape_bag_explain"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        app:layout_heightPercent="28%"
+        app:layout_marginBottomPercent="2%"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pokeDex_explain"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            />
+
+
+    </android.support.percent.PercentRelativeLayout>
+    <ImageView
+        android:id="@+id/transfer1"
+        android:background="@drawable/transfer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:id="@+id/transfer2"
+        android:background="@drawable/transfer2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+
+</android.support.percent.PercentRelativeLayout>

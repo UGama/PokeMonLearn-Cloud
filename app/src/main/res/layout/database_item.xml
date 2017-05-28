@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@drawable/shape_bag_explain">
+
+    <TextView
+        android:id="@+id/TextView"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_weight="9"
+        android:textColor="#000"/>
+    <TextView
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TextView2"
+        android:textSize="24sp"
+        android:layout_weight="1"
+        android:textColor="#000"
+        />
+   <!-- <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Databases Adddata"
+        android:textSize="24sp"
+        android:id="@+id/AddDataDatabases"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Databases Query"
+        android:textSize="24sp"
+        android:id="@+id/queryDatabases"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Databases DeleteAll"
+        android:textSize="24sp"
+        android:id="@+id/deleteAll"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OwnPet Database Add"
+        android:textSize="24sp"
+        android:id="@+id/OwnAdd"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OwnPet Database Query"
+        android:textSize="24sp"
+        android:id="@+id/OwnQuery"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OwnPet Database DeleteAll"
+        android:textSize="24sp"
+        android:id="@+id/OwnDelete"
+        />
+    <Button
+        android:id="@+id/pokemonBallAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Add PokeMonBall"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pokemonBallDelete"
+        android:text="Delete PokeMonBall"
+        android:textSize="24sp"
+        />
+    <Button
+        android:id="@+id/pokemonBallQuery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Query PokeMonBall"
+        android:textSize="24sp"/>-->
+
+</LinearLayout>

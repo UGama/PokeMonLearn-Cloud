@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/item_background"
+        android:layout_centerVertical="true"
+        app:layout_heightPercent="88%"
+        app:layout_widthPercent="88%"
+        android:background="@drawable/shape2"
+        android:layout_alignParentRight="true"
+        />
+
+    <ImageView
+        app:layout_widthPercent="22%"
+        app:layout_heightPercent="70%"
+        app:layout_marginLeftPercent="15%"
+        android:id="@+id/Ball"
+        />
+
+    <ImageView
+        app:layout_widthPercent="20%"
+        app:layout_heightPercent="76%"
+        app:layout_marginLeftPercent="38%"
+        app:layout_marginTopPercent="9%"
+        android:id="@+id/pet_pic"
+        />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/pet_name"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        app:layout_marginLeftPercent="58%"
+        app:layout_marginTopPercent="40%"
+        android:text="test"
+        />
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_centerVertical="true"
+        app:layout_widthPercent="12%"
+        app:layout_heightPercent="40%"
+        android:background="@drawable/pet_arrow"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:background="#ca0909"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_widthPercent="30%"
+        android:layout_centerHorizontal="true"
+        />
+
+
+</android.support.percent.PercentRelativeLayout>
