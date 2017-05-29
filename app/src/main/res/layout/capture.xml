@@ -160,14 +160,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/transfer1"
-        android:visibility="gone"
         />
     <ImageView
         android:background="@drawable/fight_trans2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/transfer2"
-        android:visibility="gone"
         />
     <ImageView
         android:id="@+id/transfer21"

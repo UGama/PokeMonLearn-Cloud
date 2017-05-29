@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.GetDataCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -40,6 +44,7 @@ import com.baidu.mapapi.utils.DistanceUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
@@ -76,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
     private double OverlayPosition[][];
     private String[] Url;
+    private String[] Name;
     private Bitmap[] bitmaps;
 
     private BDLocation myLocation;
@@ -143,12 +149,19 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         setContentView(R.layout.activity_main);
 
         Url = new String[5];
+        Name = new String[5];
+
         Intent intent = getIntent();
         Url[0] = intent.getStringExtra("Url1");
         Url[1] = intent.getStringExtra("Url2");
         Url[2] = intent.getStringExtra("Url3");
         Url[3] = intent.getStringExtra("Url4");
         Url[4] = intent.getStringExtra("Url5");
+        Name[0] = intent.getStringExtra("Name1");
+        Name[1] = intent.getStringExtra("Name2");
+        Name[2] = intent.getStringExtra("Name3");
+        Name[3] = intent.getStringExtra("Name4");
+        Name[4] = intent.getStringExtra("Name5");
 
 
         Intent intent1 = new Intent(MainActivity.this, MusicServer.class);
@@ -204,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         mLocClient.setLocOption(option);
         mLocClient.start();
 
-        //initOverlay();
+        initOverlay();
 
         anim0 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.touch2);
         anim1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.touch1);
@@ -392,8 +405,25 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         OverlayPosition = new double[5][2];
         OverlayPosition = getRandomPosition(5);
 
+        bitmaps = new Bitmap[5];
 
+        for (int i = 0; i < 5; i++) {
+            AVFile avFile = new AVFile("PokeMonPic.png", Url[i], new HashMap<String, Object>());
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    bitmaps[j++] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    Log.i("Test", String.valueOf(j));
+                    if (j == 5) {
+                        initOverlay2();
+                    }
+                }
+            });
+        }
 
+    }
+
+    public void initOverlay2() {
         int i = 0;
         BitmapDescriptor BDA = BitmapDescriptorFactory.fromBitmap(bitmaps[i++]);
         BitmapDescriptor BDB = BitmapDescriptorFactory.fromBitmap(bitmaps[i++]);
@@ -500,7 +530,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //String pokeMonName = Pokemon[0].getName();
                                     //Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     //intent3.putExtra("Name", pokeMonName);
                                     //startActivity(intent3);
@@ -916,7 +945,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 break;
             case R.id.menu:
                 if (MenuCount == 0) {
-
                     Menu.startAnimation(animation1);
                     littleMapLayout.setVisibility(View.GONE);
                     MenuLayout.setVisibility(View.VISIBLE);
@@ -1004,9 +1032,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    //intent3.putExtra("Name", "果然翁");
-                                    //startActivity(intent3);
+                                    Intent intent3 = new Intent(MainActivity.this, Capture.class);
+                                    intent3.putExtra("Name", "果然翁");
+                                    startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
                                     for (int i = 0; i < 4; i++) {

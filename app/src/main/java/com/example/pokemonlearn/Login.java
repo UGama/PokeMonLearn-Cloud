@@ -124,7 +124,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 public void done(AVObject avObject, AVException e) {
                     String Name = avObject.getString("ImageName");
                     Log.i("ImageName", Name);
-                    name[k++] = Name + ".png";
+                    name[k++] = Name;
                     if (k == 5) {
                         getUrl();
                     }
@@ -137,7 +137,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         k = 0;
         for (j = 0; j < 5; j++) {
             AVQuery<AVObject> list = new AVQuery<>("_File");
-            list.whereEqualTo("name", name[j]);
+            list.whereEqualTo("name", name[j] + ".png");
             list.getFirstInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject avObject, AVException e) {
@@ -182,6 +182,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.login:
                 Intent intent = new Intent(Login.this, MainActivity.class);
+                intent.putExtra("Name1", name[0]);
+                intent.putExtra("Name2", name[1]);
+                intent.putExtra("Name3", name[2]);
+                intent.putExtra("Name4", name[3]);
+                intent.putExtra("Name5", name[4]);
                 intent.putExtra("Url1", Url[0]);
                 intent.putExtra("Url2", Url[1]);
                 intent.putExtra("Url3", Url[2]);
