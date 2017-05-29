@@ -47,6 +47,8 @@ import static android.animation.ObjectAnimator.ofFloat;
  */
 
 public class Capture extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+    private String User;
+
     private ImageView transfer;
     private ImageView white;
     private Animation shrink_white;
@@ -99,6 +101,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
     int j = 0;
 
     private Bitmap C_PokeMonBitMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +109,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
 
         Intent intent = getIntent();
         String Name = intent.getStringExtra("Name");
+        User = intent.getStringExtra("User");
         //http://ac-vuvtafsi.clouddn.com/4798581ad30a5d075a9b.png
 
         AVQuery<AVObject> query1 = new AVQuery<>("PM");
@@ -126,11 +130,10 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
         });
 
 
-
         WindowManager manager = getWindowManager();
         DisplayMetrics metrics = new DisplayMetrics();
         manager.getDefaultDisplay().getMetrics(metrics);
-        Width= metrics.widthPixels;
+        Width = metrics.widthPixels;
         Height = metrics.heightPixels;
         Log.i("Windows", String.valueOf(Height) + " " + String.valueOf(Width));
 
@@ -1120,7 +1123,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                 public void done(List<AVObject> list, AVException e) {
                     Log.i("OwnPetNumber", String.valueOf(list.size()));
                     boolean Repeat = false;
-                    for (AVObject avObject: list) {
+                    for (AVObject avObject : list) {
                         if (avObject.getString("Name").equals(C_PokeMon.getName())) {
                             Repeat = true;
                         }
@@ -1258,7 +1261,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
         super.onPause();
     }
 
-    class GiveUpButton extends View{
+    class GiveUpButton extends View {
         public GiveUpButton(Context context) {
             super(context);
         }

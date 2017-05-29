@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -37,6 +38,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private String[] Url;
     private byte[][] Bytes;
 
+    private EditText UserName;
+    private EditText PassWord;
     private Button Login;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         Login = (Button) findViewById(R.id.login);
         Login.setOnClickListener(this);
+        UserName = (EditText) findViewById(R.id.UserName);
+        PassWord = (EditText) findViewById(R.id.PassWord);
 
     }
 
@@ -192,6 +197,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 intent.putExtra("Url3", Url[2]);
                 intent.putExtra("Url4", Url[3]);
                 intent.putExtra("Url5", Url[4]);
+                intent.putExtra("User", "592af79a2f301e006c561cd0");
                 startActivity(intent);
                 break;
         }

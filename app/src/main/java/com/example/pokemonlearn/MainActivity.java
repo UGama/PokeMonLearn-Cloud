@@ -61,6 +61,8 @@ import static android.animation.ObjectAnimator.ofFloat;
  */
 
 public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarkerClickListener, View.OnClickListener, View.OnTouchListener, BaiduMap.OnMapClickListener {
+    private String User;
+
     public LocationClient mLocClient = null;
     public BDLocationListener myListener = new MyLocationListener();
 
@@ -119,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
     private ImageView transfer1;
     private ImageView transfer2;
+    private Animation trans_out1;
+    private Animation trans_out2;
     private Animation transit;
 
     private ImageView warning;
@@ -130,10 +134,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     private List<ImageView> trans_right;
     private Animation cap_left;
     private Animation cap_right;
-    private ImageView temp;
 
-    private Animation trans_out1;
-    private Animation trans_out2;
+    private ImageView temp;
 
     private Button Database;
 
@@ -162,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         Name[2] = intent.getStringExtra("Name3");
         Name[3] = intent.getStringExtra("Name4");
         Name[4] = intent.getStringExtra("Name5");
+        User = intent.getStringExtra("User");
+        Log.i("User", User);
 
 
         Intent intent1 = new Intent(MainActivity.this, MusicServer.class);
@@ -173,22 +177,22 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         transfer1.startAnimation(trans_out1);
         transfer2.startAnimation(trans_out2);
         trans_out2.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    transfer1.setVisibility(View.GONE);
-                    transfer2.setVisibility(View.GONE);
-                }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                transfer1.setVisibility(View.GONE);
+                transfer2.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+            @Override
+            public void onAnimationRepeat(Animation animation) {
 
-                }
-            });
+            }
+        });
 
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
@@ -245,29 +249,33 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         animation1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.up);
         animation2 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.down);
         animation1.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Menu.startAnimation(animation2);
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Menu.startAnimation(animation2);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
         animation2.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Menu.startAnimation(animation1);
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Menu.startAnimation(animation1);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
         Menu.startAnimation(animation1);
 
         littleMapLayout = (PercentRelativeLayout) findViewById(R.id.littlemapLayout);
@@ -374,14 +382,12 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         animator.setTarget(mapMode);
         animator.setDuration(500).start();
         animator.setInterpolator(new LinearInterpolator());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    mapMode.setTranslationX((Float) animation.getAnimatedValue());
-                }
-            });
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mapMode.setTranslationX((Float) animation.getAnimatedValue());
+            }
+        });
         mapModeChose.setOnClickListener(this);
 
         Database = (Button) findViewById(R.id.dataBase);
@@ -398,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         String Coins = "      " + String.valueOf(Number) + "  ";
         MyCoins.setText(Coins);
 
-        }
+    }
 
 
     public void initOverlay() {
@@ -560,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 });
                 //Toast.makeText(this, String.valueOf(distanceUtil.getDistance(myPosition, markerA.getPosition())), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerA.getPosition())),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerA.getPosition())), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Getting a little closer.", Toast.LENGTH_SHORT).show();
             }
         } else if (marker == markerB) {
@@ -646,8 +652,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                     }
                 });
-            }else {
-                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerB.getPosition())),Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerB.getPosition())), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Getting a little closer.", Toast.LENGTH_SHORT).show();
             }
         } else if (marker == markerC) {
@@ -734,7 +740,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                     }
                 });
             } else {
-                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerC.getPosition())),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerC.getPosition())), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Getting a little closer.", Toast.LENGTH_SHORT).show();
             }
         } else if (marker == markerD) {
@@ -821,7 +827,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                     }
                 });
             } else {
-                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerD.getPosition())),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerD.getPosition())), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Getting a little closer.", Toast.LENGTH_SHORT).show();
             }
         } else if (marker == markerE) {
@@ -908,7 +914,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                     }
                 });
             } else {
-                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerE.getPosition())),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, String.valueOf(DistanceUtil.getDistance(myPosition, markerE.getPosition())), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Getting a little closer.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -1034,6 +1040,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                                 public void onAnimationEnd(Animation animation) {
                                     Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     intent3.putExtra("Name", "果然翁");
+                                    intent3.putExtra("User", User);
                                     startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
@@ -1067,11 +1074,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                     animator.setTarget(mapMode);
                     animator.setDuration(500).start();
                     animator.setInterpolator(new LinearInterpolator());
-                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-                    {
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
-                        public void onAnimationUpdate(ValueAnimator animation)
-                        {
+                        public void onAnimationUpdate(ValueAnimator animation) {
                             mapMode.setTranslationX((Float) animation.getAnimatedValue());
                         }
                     });
@@ -1081,11 +1086,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                     animator.setTarget(mapMode);
                     animator.setDuration(500).start();
                     animator.setInterpolator(new LinearInterpolator());
-                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-                    {
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
-                        public void onAnimationUpdate(ValueAnimator animation)
-                        {
+                        public void onAnimationUpdate(ValueAnimator animation) {
                             mapMode.setTranslationX((Float) animation.getAnimatedValue());
                         }
                     });
@@ -1312,7 +1315,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
             Log.i("MainActivity", String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude()));
 
 
-
             //30.318594 120.385722
             //30.318387 120.385538
 
@@ -1324,7 +1326,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 MapStatusUpdate u2 = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
                 mBaiduMap.animateMapStatus(u2);
-
 
 
             }
@@ -1342,13 +1343,13 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
     public double[][] getRandomPosition(int Number) {//30.316634 30.312634  120.401974 120.388364
         int[][] result = new int[Number][2];
-        double[][] results=new double[Number][2];
-        int i=0;
+        double[][] results = new double[Number][2];
+        int i = 0;
         while (i < Number) {
             int a = (int) (Math.random() * 4000);
             int b = (int) (Math.random() * 13610);
             int d = 0;
-            for(int j=0;j<i;j++) {
+            for (int j = 0; j < i; j++) {
                 if (Math.abs(result[j][0] - a) < 100 && Math.abs(result[j][1] - b) < 200) {
                     d = 1;
                 }
@@ -1492,8 +1493,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     @Override
     protected void onDestroy() {
         //退出时销毁定位
-        if (mLocClient != null)
-        {
+        if (mLocClient != null) {
             mLocClient.stop();
         }
         mMapView.onDestroy();
@@ -1506,7 +1506,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         int Number = preferences.getInt("Coins", 0);
         String Coins = "      " + String.valueOf(Number) + "  ";
         MyCoins.setText(Coins);
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         Intent intent0 = new Intent(MainActivity.this, CaptureMusicServer.class);
         stopService(intent0);
         Intent intent1 = new Intent(MainActivity.this, MusicServer.class);

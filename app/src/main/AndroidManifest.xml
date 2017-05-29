@@ -32,7 +32,7 @@
             android:value="76Ged3SGHKappCAo7cqRlWQ655dgX8rN" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".Login">
+        <activity android:name=".CPokeMonBall">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
