@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,13 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.GetDataCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -48,7 +40,6 @@ import com.baidu.mapapi.utils.DistanceUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
@@ -84,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     private Button mapModeChose;
 
     private double OverlayPosition[][];
-    private List<PokeMon> list0;
+    private String[] Url;
+    private Bitmap[] bitmaps;
 
     private BDLocation myLocation;
     private Marker markerA;
@@ -92,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     private Marker markerC;
     private Marker markerD;
     private Marker markerE;
-
-    private Bitmap[] bitmaps;
 
     private Button littleMap;
     private Button setting;
@@ -140,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     private Animation trans_out2;
 
     private Button Database;
-    private PokeMon[] Pokemon;
 
     private TextView MyCoins;
 
@@ -149,20 +138,28 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            SDKInitializer.initialize(getApplicationContext());
-            setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(getApplicationContext());
+        setContentView(R.layout.activity_main);
 
-            Intent intent = new Intent(MainActivity.this, MusicServer.class);
-            startService(intent);
+        Url = new String[5];
+        Intent intent = getIntent();
+        Url[0] = intent.getStringExtra("Url1");
+        Url[1] = intent.getStringExtra("Url2");
+        Url[2] = intent.getStringExtra("Url3");
+        Url[3] = intent.getStringExtra("Url4");
+        Url[4] = intent.getStringExtra("Url5");
 
-            transfer1 = (ImageView) findViewById(R.id.transfer1);
-            transfer2 = (ImageView) findViewById(R.id.transfer2);
-            trans_out1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.trans_out_up);
-            trans_out2 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.trans_out_down);
-            transfer1.startAnimation(trans_out1);
-            transfer2.startAnimation(trans_out2);
-            trans_out2.setAnimationListener(new Animation.AnimationListener() {
+
+        Intent intent1 = new Intent(MainActivity.this, MusicServer.class);
+        startService(intent1);
+        transfer1 = (ImageView) findViewById(R.id.transfer1);
+        transfer2 = (ImageView) findViewById(R.id.transfer2);
+        trans_out1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.trans_out_up);
+        trans_out2 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.trans_out_down);
+        transfer1.startAnimation(trans_out1);
+        transfer2.startAnimation(trans_out2);
+        trans_out2.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -180,63 +177,61 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 }
             });
 
-            mMapView = (MapView) findViewById(R.id.bmapView);
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
+        mBaiduMap.setBuildingsEnabled(true);
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
 
-            mBaiduMap = mMapView.getMap();
-            mBaiduMap.setBuildingsEnabled(true);
-            mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        mBaiduMap.setMyLocationEnabled(true);
+        mBaiduMap.setMaxAndMinZoomLevel(20f, 19f);
 
-            mBaiduMap.setMyLocationEnabled(true);
-            mBaiduMap.setMaxAndMinZoomLevel(20f, 19f);
+        //mBaiduMap.getUiSettings().setScrollGesturesEnabled(false);
 
-            //mBaiduMap.getUiSettings().setScrollGesturesEnabled(false);
+        myLocationConfiguration = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING,
+                true, null);
+        mBaiduMap.setMyLocationConfigeration(myLocationConfiguration);
+        mBaiduMap.setOnMapClickListener(this);
+        mBaiduMap.setOnMarkerClickListener(this);
 
-            myLocationConfiguration = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING,
-                    true, null);
-            mBaiduMap.setMyLocationConfigeration(myLocationConfiguration);
-            mBaiduMap.setOnMapClickListener(this);
+        mLocClient = new LocationClient(this);
+        mLocClient.registerLocationListener(myListener);
 
-            mBaiduMap.setOnMarkerClickListener(this);
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);// 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(2000);
 
-            mLocClient = new LocationClient(this);
-            mLocClient.registerLocationListener(myListener);
+        mLocClient.setLocOption(option);
+        mLocClient.start();
 
-            LocationClientOption option = new LocationClientOption();
-            option.setOpenGps(true);// 打开gps
-            option.setCoorType("bd09ll"); // 设置坐标类型
-            //option.setScanSpan(2000);
+        //initOverlay();
 
-            mLocClient.setLocOption(option);
-            mLocClient.start();
+        anim0 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.touch2);
+        anim1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.touch1);
 
-            initOverlay();
+        littleMap = (Button) findViewById(R.id.littlemap);
+        littleMap.setOnClickListener(this);
+        littleMap.setOnTouchListener(this);
 
-            anim0 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.touch2);
-            anim1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.touch1);
+        show = (Button) findViewById(R.id.show);
+        show.setOnClickListener(this);
+        show.setOnTouchListener(this);
 
-            littleMap = (Button) findViewById(R.id.littlemap);
-            littleMap.setOnClickListener(this);
-            littleMap.setOnTouchListener(this);
+        setting = (Button) findViewById(R.id.setting);
+        setting.setOnClickListener(this);
+        setting.setOnTouchListener(this);
 
-            show = (Button) findViewById(R.id.show);
-            show.setOnClickListener(this);
-            show.setOnTouchListener(this);
+        Show_Menu = (PercentRelativeLayout) findViewById(R.id.show_menu);
+        Show_Background = (ImageView) findViewById(R.id.show_background);
+        Show_Background.getBackground().setAlpha(125);
+        ShowCount = 0;
 
-            setting = (Button) findViewById(R.id.setting);
-            setting.setOnClickListener(this);
-            setting.setOnTouchListener(this);
-
-            Show_Menu = (PercentRelativeLayout) findViewById(R.id.show_menu);
-            Show_Background = (ImageView) findViewById(R.id.show_background);
-            Show_Background.getBackground().setAlpha(125);
-            ShowCount = 0;
-
-            Menu = (Button) findViewById(R.id.menu);
-            Menu.setOnTouchListener(this);
-            Menu.setOnClickListener(this);
-            animation1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.up);
-            animation2 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.down);
-            animation1.setAnimationListener(new Animation.AnimationListener() {
+        Menu = (Button) findViewById(R.id.menu);
+        Menu.setOnTouchListener(this);
+        Menu.setOnClickListener(this);
+        animation1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.up);
+        animation2 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.down);
+        animation1.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
                 }
@@ -248,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 public void onAnimationRepeat(Animation animation) {
                 }
             });
-            animation2.setAnimationListener(new Animation.AnimationListener() {
+        animation2.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
                 }
@@ -260,113 +255,113 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 public void onAnimationRepeat(Animation animation) {
                 }
             });
-            Menu.startAnimation(animation1);
+        Menu.startAnimation(animation1);
 
-            littleMapLayout = (PercentRelativeLayout) findViewById(R.id.littlemapLayout);
-            littleMapLayout.setVisibility(View.GONE);
-            littleMapLayout.getBackground().setAlpha(125);
+        littleMapLayout = (PercentRelativeLayout) findViewById(R.id.littlemapLayout);
+        littleMapLayout.setVisibility(View.GONE);
+        littleMapLayout.getBackground().setAlpha(125);
 
-            finish = (Button) findViewById(R.id.finish);
-            finish.setOnClickListener(this);
-            finish.setOnTouchListener(this);
+        finish = (Button) findViewById(R.id.finish);
+        finish.setOnClickListener(this);
+        finish.setOnTouchListener(this);
 
-            MenuLayout = (PercentRelativeLayout) findViewById(R.id.menuFrame);
-            MenuLayout.setVisibility(View.GONE);
-            MenuLayout.getBackground().setAlpha(125);
+        MenuLayout = (PercentRelativeLayout) findViewById(R.id.menuFrame);
+        MenuLayout.setVisibility(View.GONE);
+        MenuLayout.getBackground().setAlpha(125);
 
-            myPet = (Button) findViewById(R.id.myPet);
-            myPet.setOnClickListener(this);
-            myPet.setOnTouchListener(this);
+        myPet = (Button) findViewById(R.id.myPet);
+        myPet.setOnClickListener(this);
+        myPet.setOnTouchListener(this);
 
-            PokeDex = (Button) findViewById(R.id.pokeDex);
-            PokeDex.setOnClickListener(this);
-            PokeDex.setOnTouchListener(this);
+        PokeDex = (Button) findViewById(R.id.pokeDex);
+        PokeDex.setOnClickListener(this);
+        PokeDex.setOnTouchListener(this);
 
-            myBag = (Button) findViewById(R.id.myBag);
-            myBag.setOnClickListener(this);
-            myBag.setOnTouchListener(this);
+        myBag = (Button) findViewById(R.id.myBag);
+        myBag.setOnClickListener(this);
+        myBag.setOnTouchListener(this);
 
-            battle = (Button) findViewById(R.id.battle);
-            battle.setOnClickListener(this);
-            battle.setOnTouchListener(this);
+        battle = (Button) findViewById(R.id.battle);
+        battle.setOnClickListener(this);
+        battle.setOnTouchListener(this);
 
-            shop = (Button) findViewById(R.id.shop);
-            shop.setOnClickListener(this);
-            shop.setOnTouchListener(this);
+        shop = (Button) findViewById(R.id.shop);
+        shop.setOnClickListener(this);
+        shop.setOnTouchListener(this);
 
-            egg = (Button) findViewById(R.id.egg);
-            egg.setOnClickListener(this);
-            egg.setOnTouchListener(this);
+        egg = (Button) findViewById(R.id.egg);
+        egg.setOnClickListener(this);
+        egg.setOnTouchListener(this);
 
-            compete = (Button) findViewById(R.id.compete);
-            compete.setOnClickListener(this);
-            compete.setOnTouchListener(this);
+        compete = (Button) findViewById(R.id.compete);
+        compete.setOnClickListener(this);
+        compete.setOnTouchListener(this);
 
-            gym = (Button) findViewById(R.id.gym);
-            gym.setOnClickListener(this);
-            gym.setOnTouchListener(this);
+        gym = (Button) findViewById(R.id.gym);
+        gym.setOnClickListener(this);
+        gym.setOnTouchListener(this);
 
-            back = (Button) findViewById(R.id.back);
-            back.setOnClickListener(this);
-            back.setOnTouchListener(this);
+        back = (Button) findViewById(R.id.back);
+        back.setOnClickListener(this);
+        back.setOnTouchListener(this);
 
-            MenuCount = 0;
+        MenuCount = 0;
 
-            Button pretend = (Button) findViewById(R.id.pretend);
-            pretend.setOnClickListener(this);
-            Button pe = (Button) findViewById(R.id.pe);
-            pe.setOnClickListener(this);
+        Button pretend = (Button) findViewById(R.id.pretend);
+        pretend.setOnClickListener(this);
+        Button pe = (Button) findViewById(R.id.pe);
+        pe.setOnClickListener(this);
 
-            warning = (ImageView) findViewById(R.id.warning);
-            warning.getBackground().setAlpha(200);
-            warning.setVisibility(View.GONE);
+        warning = (ImageView) findViewById(R.id.warning);
+        warning.getBackground().setAlpha(200);
+        warning.setVisibility(View.GONE);
 
-            trans_left = new ArrayList<>();
-            trans_right = new ArrayList<>();
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_01);
-            Capture_trans.setVisibility(View.GONE);
-            trans_left.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_02);
-            Capture_trans.setVisibility(View.GONE);
-            trans_right.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_03);
-            Capture_trans.setVisibility(View.GONE);
-            trans_left.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_04);
-            Capture_trans.setVisibility(View.GONE);
-            trans_right.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_05);
-            Capture_trans.setVisibility(View.GONE);
-            trans_left.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_06);
-            Capture_trans.setVisibility(View.GONE);
-            trans_right.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_07);
-            Capture_trans.setVisibility(View.GONE);
-            trans_left.add(Capture_trans);
-            Capture_trans = (ImageView) findViewById(R.id.fight_trans_08);
-            Capture_trans.setVisibility(View.GONE);
-            trans_right.add(Capture_trans);
+        trans_left = new ArrayList<>();
+        trans_right = new ArrayList<>();
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_01);
+        Capture_trans.setVisibility(View.GONE);
+        trans_left.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_02);
+        Capture_trans.setVisibility(View.GONE);
+        trans_right.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_03);
+        Capture_trans.setVisibility(View.GONE);
+        trans_left.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_04);
+        Capture_trans.setVisibility(View.GONE);
+        trans_right.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_05);
+        Capture_trans.setVisibility(View.GONE);
+        trans_left.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_06);
+        Capture_trans.setVisibility(View.GONE);
+        trans_right.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_07);
+        Capture_trans.setVisibility(View.GONE);
+        trans_left.add(Capture_trans);
+        Capture_trans = (ImageView) findViewById(R.id.fight_trans_08);
+        Capture_trans.setVisibility(View.GONE);
+        trans_right.add(Capture_trans);
 
-            SATELLITE = (Button) findViewById(R.id.satellite);
-            SATELLITE.setOnClickListener(this);
-            SATELLITE.setOnTouchListener(this);
-            FOLLOWING = (Button) findViewById(R.id.following);
-            FOLLOWING.setOnClickListener(this);
-            FOLLOWING.setOnTouchListener(this);
-            COMPASS = (Button) findViewById(R.id.compass);
-            COMPASS.setOnClickListener(this);
-            COMPASS.setOnTouchListener(this);
+        SATELLITE = (Button) findViewById(R.id.satellite);
+        SATELLITE.setOnClickListener(this);
+        SATELLITE.setOnTouchListener(this);
+        FOLLOWING = (Button) findViewById(R.id.following);
+        FOLLOWING.setOnClickListener(this);
+        FOLLOWING.setOnTouchListener(this);
+        COMPASS = (Button) findViewById(R.id.compass);
+        COMPASS.setOnClickListener(this);
+        COMPASS.setOnTouchListener(this);
 
-            mapMode = (PercentRelativeLayout) findViewById(R.id.mapMode_background);
-            mapMode.getBackground().setAlpha(140);
-            mapModeChose = (Button) findViewById(R.id.map_mode);
+        mapMode = (PercentRelativeLayout) findViewById(R.id.mapMode_background);
+        mapMode.getBackground().setAlpha(140);
+        mapModeChose = (Button) findViewById(R.id.map_mode);
 
-            ValueAnimator animator = ValueAnimator.ofFloat(0, -380);
-            animator.setTarget(mapMode);
-            animator.setDuration(500).start();
-            animator.setInterpolator(new LinearInterpolator());
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        ValueAnimator animator = ValueAnimator.ofFloat(0, -380);
+        animator.setTarget(mapMode);
+        animator.setDuration(500).start();
+        animator.setInterpolator(new LinearInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation)
@@ -374,22 +369,21 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                     mapMode.setTranslationX((Float) animation.getAnimatedValue());
                 }
             });
-            mapModeChose.setOnClickListener(this);
+        mapModeChose.setOnClickListener(this);
 
-            Database = (Button) findViewById(R.id.dataBase);
-            Database.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Intent intent = new Intent(MainActivity.this, DatabaseOperate.class);
-                    //startActivity(intent);
-                }
-            });
-
-            MyCoins = (TextView) findViewById(R.id.myCoin);
-            SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
-            int Number = preferences.getInt("Coins", 0);
-            String Coins = "      " + String.valueOf(Number) + "  ";
-            MyCoins.setText(Coins);
+        Database = (Button) findViewById(R.id.dataBase);
+        Database.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent intent = new Intent(MainActivity.this, DatabaseOperate.class);
+                //startActivity(intent);
+            }
+        });
+        MyCoins = (TextView) findViewById(R.id.myCoin);
+        SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
+        int Number = preferences.getInt("Coins", 0);
+        String Coins = "      " + String.valueOf(Number) + "  ";
+        MyCoins.setText(Coins);
 
         }
 
@@ -398,41 +392,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         OverlayPosition = new double[5][2];
         OverlayPosition = getRandomPosition(5);
 
-        list0 = new ArrayList<>();
 
-        //LatLng llA = new LatLng(30.318462, 120.385653);//寝室
-        //LatLng llA = new LatLng(30.314638, 120.392251);//经济楼
-
-
-        Pokemon = getRandomPokemon(5);
-        bitmaps = new Bitmap[5];
-        for (j = 0; j < 5; j++) {
-            AVQuery<AVObject> list = new AVQuery<>("PM");
-            Log.i("PokeMonName", Pokemon[j].getName());
-            list.whereEqualTo("Name", Pokemon[j].getName());
-            list.getFirstInBackground(new GetCallback<AVObject>() {
-                @Override
-                public void done(AVObject avObject, AVException e) {
-                    String name = avObject.getString("ImageName");
-                    Log.i("ImageName", name);
-                    AVQuery<AVObject> list = new AVQuery<>("_File");
-                    list.whereEqualTo("ImageName", name + ".png");
-                    list.getFirstInBackground(new GetCallback<AVObject>() {
-                        @Override
-                        public void done(AVObject avObject, AVException e) {
-                            String url = avObject.getString("url");
-                            AVFile avFile = new AVFile("PokeMonPic", url, new HashMap<String, Object>());
-                            avFile.getDataInBackground(new GetDataCallback() {
-                                @Override
-                                public void done(byte[] bytes, AVException e) {
-                                    bitmaps[j] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
 
         int i = 0;
         BitmapDescriptor BDA = BitmapDescriptorFactory.fromBitmap(bitmaps[i++]);
@@ -469,7 +429,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         markerC = (Marker) mBaiduMap.addOverlay(ooC);
         markerD = (Marker) mBaiduMap.addOverlay(ooD);
         markerE = (Marker) mBaiduMap.addOverlay(ooE);
-
     }
 
     private void navigateTo(BDLocation location) {
@@ -541,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    String pokeMonName = Pokemon[0].getName();
+                                    //String pokeMonName = Pokemon[0].getName();
                                     //Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     //intent3.putExtra("Name", pokeMonName);
                                     //startActivity(intent3);
@@ -629,7 +588,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    String pokeMonName = Pokemon[1].getName();
+                                    //String pokeMonName = Pokemon[1].getName();
                                     //Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     //intent3.putExtra("Name", pokeMonName);
                                     //startActivity(intent3);
@@ -716,7 +675,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    String pokeMonName = Pokemon[2].getName();
+                                    //String pokeMonName = Pokemon[2].getName();
                                     //Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     //intent3.putExtra("Name", pokeMonName);
                                     //startActivity(intent3);
@@ -803,7 +762,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    String pokeMonName = Pokemon[3].getName();
+                                    //String pokeMonName = Pokemon[3].getName();
                                     //Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     //intent3.putExtra("Name", pokeMonName);
                                     //startActivity(intent3);
@@ -890,7 +849,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    String pokeMonName = Pokemon[4].getName();
+                                    //String pokeMonName = Pokemon[4].getName();
                                     //Intent intent3 = new Intent(MainActivity.this, Capture.class);
                                     //intent3.putExtra("Name", pokeMonName);
                                     //startActivity(intent3);
@@ -1384,71 +1343,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         return results;
     }
 
-    public PokeMon[] getRandomPokemon(int Number) {
-        list0 = new ArrayList<>();
-        AVQuery<AVObject> list = new AVQuery<>("PM");
-        list.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                if (e == null) {
-                    Log.i("Test", String.valueOf(list.size()));
-                } else {
-                    Log.i("Test", e.getMessage());
-                }
-            }
-        });
-        AVQuery<AVObject> avQuery = new AVQuery<>("PM");
-        avQuery.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> avObjects, AVException e) {
-                for (AVObject avObject : avObjects) {
-                    PokeMon pokeMon = new PokeMon(avObject.getObjectId(),
-                            avObject.getInt("Number"),
-                            avObject.getString("Name"),
-                            avObject.getString("ImageName2"),
-                            avObject.getInt("Weight"),
-                            avObject.getString("ImageName"),
-                            avObject.getString("Senior")
-                    );
-                    list0.add(pokeMon);
-                }
-            }
-        });
-        int sumWeight = 0;
-        for (PokeMon pokeMon1 : list0) {
-            sumWeight += pokeMon1.getWeight();
-        }
-        Log.i("sumWeight", String.valueOf(sumWeight));
-        PokeMon pokeMon[] = new PokeMon[5];
-        int mPokeMon = 0;
-        for (int i = 0; i < Number; i ++) {
-            int Random = (int) (Math.random() * sumWeight);
-            for (PokeMon pokeMon2 : list0) {
-                int Count = Random - pokeMon2.getWeight();
-                if (Count > 0) {
-                    Random = Count;
-                } else {
-                    boolean repeat = false;
-                    for (int j=0;j<mPokeMon;j++) {
-                        if (pokeMon2.getName().equals(pokeMon[j].getName())) {
-                            repeat = true;
-                            break;
-                        }
-                    }
-                    if (repeat) {
-                        i--;
-                        break;
-                    } else {
-                        pokeMon[mPokeMon] = pokeMon2;
-                        mPokeMon++;
-                        Log.i("Count", String.valueOf(Random) + "  " + pokeMon2.getName());
-                        break;
-                    }
-                }
-            }
-        }
-        return pokeMon;
-    }
+
 
 
 

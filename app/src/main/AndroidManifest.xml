@@ -31,14 +31,13 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="76Ged3SGHKappCAo7cqRlWQ655dgX8rN" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DataBaseOperate" />
-
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
