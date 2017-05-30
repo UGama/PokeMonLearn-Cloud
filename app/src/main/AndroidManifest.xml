@@ -50,6 +50,7 @@
         <activity android:name=".DatabaseOperate" />
         <activity android:name=".Bag" />
         <activity android:name=".Evolve" />
+        <activity android:name=".PokeDex" />
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">

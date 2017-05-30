@@ -969,8 +969,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 overridePendingTransition(0, 0);
                 break;
             case R.id.pokeDex:
-                //Intent intent1 = new Intent(MainActivity.this, PokeDex.class);
-                //startActivity(intent1);
+                Intent intent1 = new Intent(MainActivity.this, PokeDex.class);
+                startActivity(intent1);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.myPet:
