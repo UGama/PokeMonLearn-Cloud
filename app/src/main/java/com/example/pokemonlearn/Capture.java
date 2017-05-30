@@ -33,6 +33,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
@@ -75,6 +76,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
     private PokeMon C_PokeMon;
     private ImageView PMBall;
     private PokeMonBall C_PokeMonBall;
+    private OwnItem C_OwnItem;
     private boolean Judgement;
     private int StruggleCount;
 
@@ -145,7 +147,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
         query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
-                AVFile avFile = new AVFile("Image2,png", avObject.getString("url"), new HashMap<String, Object>());
+                AVFile avFile = new AVFile("Image2.png", avObject.getString("url"), new HashMap<String, Object>());
                 Log.i("Test", avObject.getString("url"));
                 avFile.getDataInBackground(new GetDataCallback() {
                     @Override
@@ -355,14 +357,14 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bag:
-                //Intent intent1 = new Intent(Capture.this, CPokeMonTool.class);
-                //startActivityForResult(intent1, 1);
-                //overridePendingTransition(0, 0);
+                Intent intent1 = new Intent(Capture.this, CPokeMonTool.class);
+                startActivityForResult(intent1, 1);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.pokemonBall:
-                //Intent intent2 = new Intent(Capture.this, CPokeMonBall.class);
-                //startActivityForResult(intent2, 2);
-                //overridePendingTransition(0, 0);
+                Intent intent2 = new Intent(Capture.this, CPokeMonBall.class);
+                startActivityForResult(intent2, 2);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.run:
                 transfer21.setVisibility(View.VISIBLE);
@@ -614,7 +616,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
         return false;
     }
 
-    /*@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -630,26 +632,62 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                     pokemonBall.setVisibility(View.GONE);
                     run.setVisibility(View.GONE);
                     String pmBall = data.getStringExtra("PMBall");
+                    String Url = data.getStringExtra("Url");
                     Log.i("PMBall", pmBall);
-                    List<PokeMonBall> list0 = DataSupport.where("Name = ?", pmBall).find(PokeMonBall.class);
-                    C_PokeMonBall = list0.get(0);
-                    List<OwnItem> list = DataSupport.where("Name = ?", pmBall).find(OwnItem.class);
-                    OwnItem ownItem0 = list.get(0);
-                    int a = ownItem0.getNumber() - 1;
-                    if (a == 0) {
-                        DataSupport.deleteAll(OwnItem.class, "Name = ?", ownItem0.getName());
-                    } else {
-                        OwnItem ownItem = new OwnItem();
-                        ownItem.setNumber(a);
-                        ownItem.updateAll("Name = ?", pmBall);
-                    }
-                    PMBall.setBackgroundResource(ownItem0.getImageResourceId());
-                    PMBall.setVisibility(View.VISIBLE);
-                    ProfileMotion(PMBall);
+                    AVQuery<AVObject> query = new AVQuery<>("PokeMonBall");
+                    query.whereEqualTo("Name", pmBall);
+                    query.getFirstInBackground(new GetCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject avObject, AVException e) {
+                            C_PokeMonBall = new PokeMonBall(avObject.getObjectId(),
+                                    avObject.getString("Name"),
+                                    avObject.getString("ImageName"),
+                                    avObject.getInt("Number"),
+                                    avObject.getDouble("Rate"),
+                                    avObject.getInt("Price"));
+                        }
+                    });
+
+                    AVObject User = AVObject.createWithoutData("Users", "592af79a2f301e006c561cd0");
+                    AVRelation<AVObject> relation = User.getRelation("OwnItem");
+                    AVQuery<AVObject> query1 = relation.getQuery();
+                    query1.whereEqualTo("Name", pmBall);
+                    query1.getFirstInBackground(new GetCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject avObject, AVException e) {
+                            C_OwnItem = new OwnItem(avObject.getObjectId(),
+                                    avObject.getString("Name"),
+                                    avObject.getInt("Number"),
+                                    avObject.getInt("Type"),
+                                    avObject.getString("ImageName"),
+                                    avObject.getInt("Dex"));
+                            int a = C_OwnItem.getNumber() - 1;
+                            if (a == 0) {
+                                avObject.deleteInBackground();
+                            } else {
+                                avObject.put("Number", a);
+                                avObject.saveInBackground();
+                            }
+                        }
+                    });
+
+                    AVFile avFile = new AVFile("PMBallImage.png", Url, new HashMap<String, Object>());
+                    avFile.getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] bytes, AVException e) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            PMBall.setImageBitmap(bitmap);
+                            PMBall.setVisibility(View.VISIBLE);
+                            ProfileMotion(PMBall);
+                        }
+                    });
+
+                    fightMessage.setText("使用了 " + pmBall + " 。");
+                    ScreenRun(Text_Screen);
                 }
                 break;
         }
-    }*/
+    }
 
     public void ScreenRun(View view) {
         ObjectAnimator anim1 = ofFloat(view, "scaleX",

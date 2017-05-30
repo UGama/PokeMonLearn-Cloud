@@ -37,10 +37,9 @@ import java.util.List;
  * Created by Gama on 11/5/17.
  */
 
-public class CPokeMonBall extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class CPokeMonTool extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
     private String User;
     private List<OwnItem> ownItems;
-    private String Url;
 
     private ImageView transfer1;
     private ImageView transfer2;
@@ -71,7 +70,7 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
         AVObject User = AVObject.createWithoutData("Users", "592af79a2f301e006c561cd0");
         AVRelation<AVObject> relation = User.getRelation("OwnItem");
         AVQuery<AVObject> query = relation.getQuery();
-        query.whereEqualTo("Type", 1);
+        query.whereEqualTo("Type", 2);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -94,8 +93,8 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
     public void UIInit() {
         transfer1 = (ImageView) findViewById(R.id.transfer1);
         transfer2 = (ImageView) findViewById(R.id.transfer2);
-        trans_out1 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.trans_out_up);
-        trans_out2 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.trans_out_down);
+        trans_out1 = AnimationUtils.loadAnimation(CPokeMonTool.this, R.anim.trans_out_up);
+        trans_out2 = AnimationUtils.loadAnimation(CPokeMonTool.this, R.anim.trans_out_down);
         transfer1.startAnimation(trans_out1);
         transfer2.startAnimation(trans_out2);
         trans_out2.setAnimationListener(new Animation.AnimationListener() {
@@ -123,11 +122,11 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
 
         Item_name = (TextView) findViewById(R.id.item_name);
         Bag_Pic = (ImageView) findViewById(R.id.bag_pic);
-        Bag_Pic.setBackgroundResource(R.drawable.init_ball);
+        Bag_Pic.setBackgroundResource(R.drawable.init_ball2);
 
-        anim4 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.anim4);
+        anim4 = AnimationUtils.loadAnimation(CPokeMonTool.this, R.anim.anim4);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(CPokeMonBall.this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(CPokeMonTool.this);
         recyclerView.setLayoutManager(layoutManager);
         ItemAdapter adapter2 = new ItemAdapter(ownItems);
         recyclerView.setAdapter(adapter2);
@@ -143,8 +142,8 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
         Cancel.setOnClickListener(this);
         Cancel.setOnTouchListener(this);
         Cancel.setVisibility(View.GONE);
-        float2 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.cap_float2);
-        float3 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.cap_float3);
+        float2 = AnimationUtils.loadAnimation(CPokeMonTool.this, R.anim.cap_float2);
+        float3 = AnimationUtils.loadAnimation(CPokeMonTool.this, R.anim.cap_float3);
     }
 
     @Override
@@ -152,7 +151,7 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.Layout_up:
                 Item_name.setText(" ? ? ? ");
-                Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.init_ball);
+                Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.init_ball2);
                 Bag_Pic.setImageBitmap(bitmap);
                 Item.setVisibility(View.VISIBLE);
                 Use.setVisibility(View.GONE);
@@ -160,10 +159,9 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
                 FirstTouch = true;
                 break;
             case R.id.use:
-                String PMBall = Item_name.getText().toString();
+                String PMTool = Item_name.getText().toString();
                 Intent intent1 = new Intent();
-                intent1.putExtra("PMBall", PMBall);
-                intent1.putExtra("Url", Url);
+                intent1.putExtra("PMTool", PMTool);
                 setResult(RESULT_OK, intent1);
                 finish();
                 break;
@@ -224,9 +222,9 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
                             query.getFirstInBackground(new GetCallback<AVObject>() {
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
-                                    Url = avObject.getString("url");
-                                    Log.i("Url", Url);
-                                    AVFile avFile = new AVFile("PokeMonPic.png", Url, new HashMap<String, Object>());
+                                    String url = avObject.getString("url");
+                                    Log.i("Url", url);
+                                    AVFile avFile = new AVFile("PokeMonPic.png", url, new HashMap<String, Object>());
                                     avFile.getDataInBackground(new GetDataCallback() {
                                         @Override
                                         public void done(byte[] bytes, AVException e) {
