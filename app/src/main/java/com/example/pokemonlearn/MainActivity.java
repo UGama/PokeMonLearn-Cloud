@@ -963,8 +963,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 }
                 break;
             case R.id.myBag:
-                //Intent intent0 = new Intent(MainActivity.this, Bag.class);
-                //startActivity(intent0);
+                Intent intent0 = new Intent(MainActivity.this, Bag.class);
+                intent0.putExtra("User", User);
+                startActivity(intent0);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.pokeDex:

@@ -227,7 +227,7 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
 
         Item_name = (TextView) findViewById(R.id.item_name);
         Bag_Pic = (ImageView) findViewById(R.id.bag_pic);
-        Bag_Pic.setBackgroundResource(R.drawable.init_ball3);
+        Bag_Pic.setImageResource(R.drawable.init_ball3);
 
         Item = (ImageView) findViewById(R.id.Item);
         Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.bag_decorate2);
@@ -262,7 +262,7 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.Layout_up:
                 Item_name.setText(" ? ? ? ");
-                Bag_Pic.setBackgroundResource(R.drawable.init_ball3);
+                Bag_Pic.setImageResource(R.drawable.init_ball3);
                 Item.setVisibility(View.VISIBLE);
                 Use.setVisibility(View.GONE);
                 Cancel.setVisibility(View.GONE);

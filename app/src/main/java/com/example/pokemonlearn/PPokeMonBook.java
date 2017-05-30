@@ -211,7 +211,7 @@ public class PPokeMonBook extends AppCompatActivity implements View.OnClickListe
 
         Item_name = (TextView) findViewById(R.id.item_name);
         Bag_Pic = (ImageView) findViewById(R.id.bag_pic);
-        Bag_Pic.setBackgroundResource(R.drawable.init_ball4);
+        Bag_Pic.setImageResource(R.drawable.init_ball4);
 
         anim4 = AnimationUtils.loadAnimation(PPokeMonBook.this, R.anim.anim4);
 
@@ -248,7 +248,7 @@ public class PPokeMonBook extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.Layout_up:
                 Item_name.setText(" ? ? ? ");
-                Bag_Pic.setBackgroundResource(R.drawable.init_ball4);
+                Bag_Pic.setImageResource(R.drawable.init_ball4);
                 Item.setVisibility(View.VISIBLE);
                 Use.setVisibility(View.GONE);
                 Cancel.setVisibility(View.GONE);
