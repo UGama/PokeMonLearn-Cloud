@@ -45,6 +45,8 @@
         <activity android:name=".PPokeMonStone" />
         <activity android:name=".PPokeMonBook" />
         <activity android:name=".Shop" />
+        <activity android:name=".SBuy" />
+        <activity android:name=".SSell" />
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">

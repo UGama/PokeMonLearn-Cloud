@@ -1112,6 +1112,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 break;
             case R.id.shop:
                 Intent intent3 = new Intent(MainActivity.this, Shop.class);
+                intent3.putExtra("User", User);
                 startActivity(intent3);
                 overridePendingTransition(0, 0);
                 break;

@@ -29,6 +29,7 @@ import android.widget.TextView;
  */
 
 public class Shop extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+    private String User;
 
     private ImageView transfer1;
     private ImageView transfer2;
@@ -68,10 +69,13 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop);
 
+        Intent intent = getIntent();
+        User = intent.getStringExtra("User");
+
         WindowManager manager = getWindowManager();
         DisplayMetrics metrics = new DisplayMetrics();
         manager.getDefaultDisplay().getMetrics(metrics);
-        Width= metrics.widthPixels;
+        Width = metrics.widthPixels;
         Height = metrics.heightPixels;
         Log.i("Windows", String.valueOf(Height) + " " + String.valueOf(Width));
 
@@ -252,7 +256,7 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Vie
         Cast = (ImageView) findViewById(R.id.cast);
         Cast.setVisibility(View.GONE);
 
-        Intent intent = new Intent(Shop.this, ShopMusicServer.class);
+        Intent intent0 = new Intent(Shop.this, ShopMusicServer.class);
         startService(intent);
     }
 
@@ -401,12 +405,14 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Vie
                 }
                 break;
             case R.id.buy:
-                //Intent intent1 = new Intent(Shop.this, SBuy.class);
-                //startActivity(intent1);
+                Intent intent1 = new Intent(Shop.this, SBuy.class);
+                intent1.putExtra("User", User);
+                startActivity(intent1);
                 break;
             case R.id.sell:
-                //Intent intent2 = new Intent(Shop.this, SSell.class);
-                //startActivity(intent2);
+                Intent intent2 = new Intent(Shop.this, SSell.class);
+                intent2.putExtra("User", User);
+                startActivity(intent2);
                 break;
             case R.id.leave:
                 finish();
