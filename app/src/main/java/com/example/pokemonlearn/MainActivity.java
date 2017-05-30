@@ -1040,7 +1040,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    intent3.putExtra("Name", "果然翁");
+                                    intent3.putExtra("Name", "伊布");
                                     intent3.putExtra("User", User);
                                     startActivity(intent3);
                                     overridePendingTransition(0, 0);
@@ -1111,8 +1111,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                                 MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
                 break;
             case R.id.shop:
-                //Intent intent3 = new Intent(MainActivity.this, Shop.class);
-                //startActivity(intent3);
+                Intent intent3 = new Intent(MainActivity.this, Shop.class);
+                startActivity(intent3);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.pe:

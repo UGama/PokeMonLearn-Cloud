@@ -42,6 +42,9 @@
         <activity android:name=".CPokeMonTool" />
         <activity android:name=".CPokeMonBall" />
         <activity android:name=".Pet" />
+        <activity android:name=".PPokeMonStone" />
+        <activity android:name=".PPokeMonBook" />
+        <activity android:name=".Shop" />
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">

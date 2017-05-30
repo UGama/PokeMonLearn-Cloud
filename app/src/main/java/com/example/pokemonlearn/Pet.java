@@ -220,32 +220,38 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.learn:
-                //Intent intent1 = new Intent(Pet.this, PPokeMonBook.class);
-                //intent1.putExtra("PokeMon", Name);
-                //startActivityForResult(intent1, 3);
-                //overridePendingTransition(0, 0);
+                Intent intent1 = new Intent(Pet.this, PPokeMonBook.class);
+                intent1.putExtra("PokeMon", Name);
+                startActivityForResult(intent1, 3);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.evolve:
-                /*List<PokeMon> pokeMons = DataSupport.where("Name = ?", Name).find(PokeMon.class);
-                PokeMon pokeMon = pokeMons.get(0);
-                if (pokeMon.Senior == null) {
-                    String tip = Name + " 已是最高级形态。";
-                    Pet_Message.setText(tip);
-                    ScreenRun(Screen);
-                } else {
-                    Log.i("PokeMon", pokeMon.getName() + " " + pokeMon.Senior);
-                    Intent intent2 = new Intent(Pet.this, PPokeMonStone.class);
-                    intent2.putExtra("PokeMon", Name);
-                    startActivityForResult(intent2, 4);
-                    overridePendingTransition(0, 0);
-                }*/
+                AVQuery<AVObject> query = new AVQuery<>("PM");
+                query.whereEqualTo("Name", Name);
+                query.getFirstInBackground(new GetCallback<AVObject>() {
+                    @Override
+                    public void done(AVObject avObject, AVException e) {
+                        if (avObject.getString("Senior") == null) {
+                            String tip = Name + " 已是最高级形态。";
+                            Pet_Message.setText(tip);
+                            ScreenRun(Screen);
+                        } else {
+                            Log.i("PokeMon", avObject.getString("Name") + " " + avObject.getString("Senior"));
+                            Intent intent2 = new Intent(Pet.this, PPokeMonStone.class);
+                            intent2.putExtra("PokeMon", Name);
+                            intent2.putExtra("User", User);
+                            startActivityForResult(intent2, 4);
+                            overridePendingTransition(0, 0);
+                        }
+                    }
+                });
                 break;
             case R.id.free:
                 AVObject user = AVObject.createWithoutData("Users", User);
                 AVRelation<AVObject> relation = user.getRelation("OwnPet");
-                AVQuery<AVObject> query = relation.getQuery();
-                query.whereEqualTo("Name", Name);
-                query.getFirstInBackground(new GetCallback<AVObject>() {
+                AVQuery<AVObject> query1 = relation.getQuery();
+                query1.whereEqualTo("Name", Name);
+                query1.getFirstInBackground(new GetCallback<AVObject>() {
                     @Override
                     public void done(AVObject avObject, AVException e) {
                         avObject.deleteInBackground();
@@ -260,6 +266,11 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                             }
                         })
                         .show();
+                for (OwnPet ownPet : list) {
+                    if (ownPet.getName().equals(Name)) {
+                        list.remove(ownPet);
+                    }
+                }
                 LinearLayoutManager layoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(layoutManager);
                 OwnPetAdapter adapter = new OwnPetAdapter(list);
