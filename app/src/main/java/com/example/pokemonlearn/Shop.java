@@ -408,11 +408,13 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Vie
                 Intent intent1 = new Intent(Shop.this, SBuy.class);
                 intent1.putExtra("User", User);
                 startActivity(intent1);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.sell:
                 Intent intent2 = new Intent(Shop.this, SSell.class);
                 intent2.putExtra("User", User);
                 startActivity(intent2);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.leave:
                 finish();

@@ -37,8 +37,10 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -107,10 +109,23 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
     private int NumberInDex;
     private int SceneResource;
 
+    List<Item> items1;
+    List<Item> items2;
+    List<Item> items3;
+    List<Item> items4;
+    List<Item> items5;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.s_series);
+
+        S_Pic = (ImageView) findViewById(R.id.S_Pic);
+        S_Pic.setVisibility(View.GONE);
+        Item_Pic = (ImageView) findViewById(R.id.item_pic);
+        Item_Pic.setVisibility(View.GONE);
+        Item_Name = (TextView) findViewById(R.id.item_name);
+        Item_Name.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         User = intent.getStringExtra("User");
@@ -132,94 +147,160 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                 }
             }
         });
-
-        myPagerAdapter = new MyPagerAdapter();
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPager.setVisibility(View.GONE);
-        viewPager.setAdapter(myPagerAdapter);
-        indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
-        indicator.setLength(myPagerAdapter.List.size());
-        anim4 = AnimationUtils.loadAnimation(SBuy.this, R.anim.anim4);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        items1 = new ArrayList<>();
+        AVQuery<AVObject> query1 = new AVQuery<>("PokeMonBall");
+        query1.findInBackground(new FindCallback<AVObject>() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                indicator.setSelected(position);
-                position = position % 5;
-                FirstTouch = true;
-                Buy.setVisibility(View.GONE);
-                Cancel.setVisibility(View.GONE);
-                Log.i("Page", String.valueOf(position));
-                switch (position) {
-                    case 0:
-                        Item_Pic.setVisibility(View.VISIBLE);
-                        Item_Name.setVisibility(View.VISIBLE);
-                        Pet_Init.setVisibility(View.GONE);
-                        S_Pic.startAnimation(anim4);
-                        S_Pic.setImageResource(v1.SourceId1);
-                        Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), v1.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap);
-                        Item_Name.setText(" ? ? ? ");
-                        PagesCount = 1;
-                        break;
-                    case 1:
-                        Item_Pic.setVisibility(View.VISIBLE);
-                        Item_Name.setVisibility(View.VISIBLE);
-                        Pet_Init.setVisibility(View.GONE);
-                        S_Pic.startAnimation(anim4);
-                        S_Pic.setImageResource(v2.SourceId1);
-                        Bitmap bitmap2 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v2.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap2);
-                        Item_Name.setText(" ? ? ? ");
-                        PagesCount = 2;
-                        break;
-                    case 2:
-                        Item_Pic.setVisibility(View.VISIBLE);
-                        Item_Name.setVisibility(View.VISIBLE);
-                        Pet_Init.setVisibility(View.GONE);
-                        S_Pic.startAnimation(anim4);
-                        S_Pic.setImageResource(v3.SourceId1);
-                        Bitmap bitmap3 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v3.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap3);
-                        Item_Name.setText(" ? ? ? ");
-                        PagesCount = 3;
-                        break;
-                    case 3:
-                        Item_Pic.setVisibility(View.VISIBLE);
-                        Item_Name.setVisibility(View.VISIBLE);
-                        Pet_Init.setVisibility(View.GONE);
-                        S_Pic.startAnimation(anim4);
-                        S_Pic.setImageResource(v4.SourceId1);
-                        Bitmap bitmap4 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v4.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap4);
-                        Item_Name.setText(" ? ? ? ");
-                        PagesCount = 4;
-                        break;
-                    case 4:
-                        Pet_Init.setVisibility(View.VISIBLE);
-                        S_Pic.setImageResource(v5.SourceId1);
-                        Bitmap bitmap5 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v5.SourceId2);
-                        Pet_Init.setImageBitmap(bitmap5);
-                        Item_Pic.setVisibility(View.GONE);
-                        Item_Name.setVisibility(View.GONE);
-                        PagesCount = 5;
-                        break;
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Item item = new Item(avObject.getString("Name"),
+                            avObject.getString("ImageName"), 1,
+                            avObject.getInt("Price"));
+                    items1.add(item);
                 }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
 
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+        items2 = new ArrayList<>();
+        AVQuery<AVObject> query2 = new AVQuery<>("PokeMonTool");
+        query2.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Item item = new Item(avObject.getString("Name"),
+                            avObject.getString("ImageName"), 2,
+                            avObject.getInt("Price"));
+                    items2.add(item);
+                }
+            }
+        });
 
-        UIInit();
+        items3 = new ArrayList<>();
+        AVQuery<AVObject> query3 = new AVQuery<>("PokeMonStone");
+        query3.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Item item = new Item(avObject.getString("Name"),
+                            avObject.getString("ImageName"), 3,
+                            avObject.getInt("Price"));
+                    items3.add(item);
+                }
+
+            }
+        });
+
+        items4 = new ArrayList<>();
+        AVQuery<AVObject> query4 = new AVQuery<>("PokeMonBook");
+        query4.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Item item = new Item(avObject.getString("Name"),
+                            avObject.getString("ImageName"), 4,
+                            avObject.getInt("Price"));
+                    items4.add(item);
+                }
+            }
+        });
+
+        items5 = new ArrayList<>();
+        AVQuery<AVObject> query5 = new AVQuery<>("Scene");
+        query5.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Item item = new Item(String.valueOf(avObject.getInt("Number")),
+                            avObject.getString("ImageName"), 5,
+                            avObject.getInt("Price"));
+                    items5.add(item);
+                }
+                recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+                myPagerAdapter = new MyPagerAdapter();
+                viewPager = (ViewPager) findViewById(R.id.viewPager);
+                viewPager.setVisibility(View.GONE);
+                viewPager.setAdapter(myPagerAdapter);
+                indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
+                indicator.setLength(myPagerAdapter.List.size());
+                anim4 = AnimationUtils.loadAnimation(SBuy.this, R.anim.anim4);
+                UIInit();
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        indicator.setSelected(position);
+                        position = position % 5;
+                        FirstTouch = true;
+                        Buy.setVisibility(View.GONE);
+                        Cancel.setVisibility(View.GONE);
+                        Log.i("Page", String.valueOf(position));
+                        switch (position) {
+                            case 0:
+                                Item_Pic.setVisibility(View.VISIBLE);
+                                Item_Name.setVisibility(View.VISIBLE);
+                                Pet_Init.setVisibility(View.GONE);
+                                S_Pic.startAnimation(anim4);
+                                S_Pic.setImageResource(v1.SourceId1);
+                                Item_Pic.setImageResource(v1.SourceId2);
+                                Item_Name.setText(" ? ? ? ");
+                                PagesCount = 1;
+                                break;
+                            case 1:
+                                Item_Pic.setVisibility(View.VISIBLE);
+                                Item_Name.setVisibility(View.VISIBLE);
+                                Pet_Init.setVisibility(View.GONE);
+                                S_Pic.startAnimation(anim4);
+                                S_Pic.setImageResource(v2.SourceId1);
+                                Item_Pic.setImageResource(v2.SourceId2);
+                                Item_Name.setText(" ? ? ? ");
+                                PagesCount = 2;
+                                break;
+                            case 2:
+                                Item_Pic.setVisibility(View.VISIBLE);
+                                Item_Name.setVisibility(View.VISIBLE);
+                                Pet_Init.setVisibility(View.GONE);
+                                S_Pic.startAnimation(anim4);
+                                S_Pic.setImageResource(v3.SourceId1);
+                                Item_Pic.setImageResource(v3.SourceId2);
+                                Item_Name.setText(" ? ? ? ");
+                                PagesCount = 3;
+                                break;
+                            case 3:
+                                Item_Pic.setVisibility(View.VISIBLE);
+                                Item_Name.setVisibility(View.VISIBLE);
+                                Pet_Init.setVisibility(View.GONE);
+                                S_Pic.startAnimation(anim4);
+                                S_Pic.setImageResource(v4.SourceId1);
+                                Item_Pic.setImageResource(v4.SourceId2);
+                                Item_Name.setText(" ? ? ? ");
+                                PagesCount = 4;
+                                break;
+                            case 4:
+                                Pet_Init.setVisibility(View.VISIBLE);
+                                S_Pic.setImageResource(v5.SourceId1);
+                                Pet_Init.setImageResource(v5.SourceId2);
+                                Item_Pic.setVisibility(View.GONE);
+                                Item_Name.setVisibility(View.GONE);
+                                PagesCount = 5;
+                                break;
+                        }
+                        Log.i("Page", String.valueOf(PagesCount));
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+            }
+        });
+
+
     }
 
     public void UIInit() {
@@ -393,13 +474,6 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
         float2 = AnimationUtils.loadAnimation(SBuy.this, R.anim.cap_float2);
         float3 = AnimationUtils.loadAnimation(SBuy.this, R.anim.cap_float3);
 
-        S_Pic = (ImageView) findViewById(R.id.S_Pic);
-        S_Pic.setVisibility(View.GONE);
-        Item_Pic = (ImageView) findViewById(R.id.item_pic);
-        Item_Pic.setVisibility(View.GONE);
-        Item_Name = (TextView) findViewById(R.id.item_name);
-        Item_Name.setVisibility(View.GONE);
-
         SBuy_Message = (TextView) findViewById(R.id.s_message);
         Screen = (ImageView) findViewById(R.id.screen);
 
@@ -497,12 +571,20 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                         editor.apply();
                         String item_name = Item_Name.getText().toString();
                         boolean isHaven = false;
-                        for (OwnItem ownItem : ownItems) {
+                        for (final OwnItem ownItem : ownItems) {
                             if (ownItem.getName().equals(item_name)) {
                                 isHaven = true;
-                                AVObject avObject = AVObject.createWithoutData("OwnItem", ownItem.getId());
-                                avObject.put("Number", ownItem.getNumber() + number);
-                                avObject.saveInBackground();
+                                final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                AVQuery<AVObject> query = relation.getQuery();
+                                query.whereEqualTo("Name", item_name);
+                                query.getFirstInBackground(new GetCallback<AVObject>() {
+                                    @Override
+                                    public void done(AVObject avObject, AVException e) {
+                                        avObject.put("Number", ownItem.getNumber() + number);
+                                        avObject.saveInBackground();
+                                    }
+                                });
                                 break;
                             }
                         }
@@ -514,13 +596,22 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                     query.getFirstInBackground(new GetCallback<AVObject>() {
                                         @Override
                                         public void done(AVObject avObject, AVException e) {
-                                            AVObject avObject1 = new AVObject("OwnItem");
+                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                            final AVObject avObject1 = new AVObject("OwnItem");
                                             avObject1.put("Name", avObject.getString("Name"));
                                             avObject1.put("Number", number);
                                             avObject1.put("ImageName", avObject.getString("ImageName"));
                                             avObject1.put("Dex", avObject.getInt("Number"));
                                             avObject1.put("Type", 1);
-                                            avObject1.saveInBackground();
+
+                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                    relation.add(avObject1);
+                                                    User1.saveInBackground();
+                                                }
+                                            });
                                         }
                                     });
                                     break;
@@ -530,13 +621,22 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                     query2.getFirstInBackground(new GetCallback<AVObject>() {
                                         @Override
                                         public void done(AVObject avObject, AVException e) {
-                                            AVObject avObject1 = new AVObject("OwnItem");
+                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                            final AVObject avObject1 = new AVObject("OwnItem");
                                             avObject1.put("Name", avObject.getString("Name"));
                                             avObject1.put("Number", number);
                                             avObject1.put("ImageName", avObject.getString("ImageName"));
                                             avObject1.put("Dex", avObject.getInt("Number"));
                                             avObject1.put("Type", 2);
-                                            avObject1.saveInBackground();
+
+                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                    relation.add(avObject1);
+                                                    User1.saveInBackground();
+                                                }
+                                            });
                                         }
                                     });
                                     break;
@@ -546,13 +646,22 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                     query3.getFirstInBackground(new GetCallback<AVObject>() {
                                         @Override
                                         public void done(AVObject avObject, AVException e) {
-                                            AVObject avObject1 = new AVObject("OwnItem");
+                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                            final AVObject avObject1 = new AVObject("OwnItem");
                                             avObject1.put("Name", avObject.getString("Name"));
                                             avObject1.put("Number", number);
                                             avObject1.put("ImageName", avObject.getString("ImageName"));
                                             avObject1.put("Dex", avObject.getInt("Number"));
                                             avObject1.put("Type", 3);
-                                            avObject1.saveInBackground();
+
+                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                    relation.add(avObject1);
+                                                    User1.saveInBackground();
+                                                }
+                                            });
                                         }
                                     });
                                     break;
@@ -562,13 +671,22 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                     query4.getFirstInBackground(new GetCallback<AVObject>() {
                                         @Override
                                         public void done(AVObject avObject, AVException e) {
-                                            AVObject avObject1 = new AVObject("OwnItem");
+                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                            final AVObject avObject1 = new AVObject("OwnItem");
                                             avObject1.put("Name", avObject.getString("Name"));
                                             avObject1.put("Number", number);
                                             avObject1.put("ImageName", avObject.getString("ImageName"));
                                             avObject1.put("Dex", avObject.getInt("Number"));
                                             avObject1.put("Type", 4);
-                                            avObject1.saveInBackground();
+
+                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                    relation.add(avObject1);
+                                                    User1.saveInBackground();
+                                                }
+                                            });
                                         }
                                     });
                                     break;
@@ -689,99 +807,34 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
             recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
             switch (List.get(position).Number) {
                 case 1:
-                    AVQuery<AVObject> query1 = new AVQuery<>("PokeMonBall");
-                    query1.findInBackground(new FindCallback<AVObject>() {
-                        @Override
-                        public void done(List<AVObject> list, AVException e) {
-                            List<Item> items1 = new ArrayList<>();
-                            for (AVObject avObject : list) {
-                                Item item = new Item(avObject.getString("Name"),
-                                        avObject.getString("ImageName"), 1,
-                                        avObject.getInt("Price"));
-                                items1.add(item);
-                            }
-                            LinearLayoutManager layoutManager1 = new LinearLayoutManager(SBuy.this);
-                            recyclerView.setLayoutManager(layoutManager1);
-                            ItemAdapter adapter1 = new ItemAdapter(items1);
-                            recyclerView.setAdapter(adapter1);
-                        }
-                    });
+                    LinearLayoutManager layoutManager1 = new LinearLayoutManager(SBuy.this);
+                    recyclerView.setLayoutManager(layoutManager1);
+                    ItemAdapter adapter1 = new ItemAdapter(items1);
+                    recyclerView.setAdapter(adapter1);
                     break;
                 case 2:
-                    AVQuery<AVObject> query2 = new AVQuery<>("PokeMonTool");
-                    query2.findInBackground(new FindCallback<AVObject>() {
-                        @Override
-                        public void done(List<AVObject> list, AVException e) {
-                            List<Item> items1 = new ArrayList<>();
-                            for (AVObject avObject : list) {
-                                Item item = new Item(avObject.getString("Name"),
-                                        avObject.getString("ImageName"), 2,
-                                        avObject.getInt("Price"));
-                                items1.add(item);
-                            }
-                            LinearLayoutManager layoutManager1 = new LinearLayoutManager(SBuy.this);
-                            recyclerView.setLayoutManager(layoutManager1);
-                            ItemAdapter adapter1 = new ItemAdapter(items1);
-                            recyclerView.setAdapter(adapter1);
-                        }
-                    });
+                    LinearLayoutManager layoutManager2 = new LinearLayoutManager(SBuy.this);
+                    recyclerView.setLayoutManager(layoutManager2);
+                    ItemAdapter adapter2 = new ItemAdapter(items2);
+                    recyclerView.setAdapter(adapter2);
                     break;
                 case 3:
-                    AVQuery<AVObject> query3 = new AVQuery<>("PokeMonStone");
-                    query3.findInBackground(new FindCallback<AVObject>() {
-                        @Override
-                        public void done(List<AVObject> list, AVException e) {
-                            List<Item> items1 = new ArrayList<>();
-                            for (AVObject avObject : list) {
-                                Item item = new Item(avObject.getString("Name"),
-                                        avObject.getString("ImageName"), 3,
-                                        avObject.getInt("Price"));
-                                items1.add(item);
-                            }
-                            LinearLayoutManager layoutManager1 = new LinearLayoutManager(SBuy.this);
-                            recyclerView.setLayoutManager(layoutManager1);
-                            ItemAdapter adapter1 = new ItemAdapter(items1);
-                            recyclerView.setAdapter(adapter1);
-                        }
-                    });
+                    LinearLayoutManager layoutManager3 = new LinearLayoutManager(SBuy.this);
+                    recyclerView.setLayoutManager(layoutManager3);
+                    ItemAdapter adapter3 = new ItemAdapter(items3);
+                    recyclerView.setAdapter(adapter3);
                     break;
                 case 4:
-                    AVQuery<AVObject> query4 = new AVQuery<>("PokeMonBook");
-                    query4.findInBackground(new FindCallback<AVObject>() {
-                        @Override
-                        public void done(List<AVObject> list, AVException e) {
-                            List<Item> items1 = new ArrayList<>();
-                            for (AVObject avObject : list) {
-                                Item item = new Item(avObject.getString("Name"),
-                                        avObject.getString("ImageName"), 4,
-                                        avObject.getInt("Price"));
-                                items1.add(item);
-                            }
-                            LinearLayoutManager layoutManager1 = new LinearLayoutManager(SBuy.this);
-                            recyclerView.setLayoutManager(layoutManager1);
-                            ItemAdapter adapter1 = new ItemAdapter(items1);
-                            recyclerView.setAdapter(adapter1);
-                        }
-                    });
+                    LinearLayoutManager layoutManager4 = new LinearLayoutManager(SBuy.this);
+                    recyclerView.setLayoutManager(layoutManager4);
+                    ItemAdapter adapter4 = new ItemAdapter(items4);
+                    recyclerView.setAdapter(adapter4);
                     break;
                 case 5:
-                    AVQuery<AVObject> query5 = new AVQuery<>("Scene");
-                    query5.findInBackground(new FindCallback<AVObject>() {
-                        @Override
-                        public void done(List<AVObject> list, AVException e) {
-                            List<Item> items1 = new ArrayList<>();
-                            for (AVObject avObject : list) {
-                                Item item = new Item(String.valueOf(avObject.getInt("Number")),
-                                        avObject.getString("ImageName"), 5,
-                                        avObject.getInt("Price"));
-                                items1.add(item);
-                            }
-                            LinearLayoutManager layoutManager1 = new LinearLayoutManager(SBuy.this);
-                            recyclerView.setLayoutManager(layoutManager1);
-                            ItemAdapter adapter1 = new ItemAdapter(items1);
-                            recyclerView.setAdapter(adapter1);
-                        }
-                    });
+                    LinearLayoutManager layoutManager5 = new LinearLayoutManager(SBuy.this);
+                    recyclerView.setLayoutManager(layoutManager5);
+                    ItemAdapter adapter5 = new ItemAdapter(items5);
+                    recyclerView.setAdapter(adapter5);
                     break;
             }
             container.addView(view);
@@ -927,7 +980,7 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                             break;
                         case 5:
                             AVQuery<AVObject> query5 = new AVQuery<>("Scene");
-                            query5.whereEqualTo("Name", ChoseName);
+                            query5.whereEqualTo("Number", Integer.valueOf(ChoseName));
                             query5.getFirstInBackground(new GetCallback<AVObject>() {
                                 @Override
                                 public void done(AVObject avObject, AVException e) {

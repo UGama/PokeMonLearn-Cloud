@@ -47,6 +47,7 @@
         <activity android:name=".Shop" />
         <activity android:name=".SBuy" />
         <activity android:name=".SSell" />
+        <activity android:name=".DatabaseOperate" />
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">

@@ -112,7 +112,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
         setContentView(R.layout.s_series);
 
         Intent intent0 = getIntent();
-        User = intent0.getStringExtra("user");
+        User = intent0.getStringExtra("User");
 
         ownItems = new ArrayList<>();
         AVObject user = AVObject.createWithoutData("Users", User);
@@ -130,35 +130,16 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                             avObject.getInt("Dex"));
                     ownItems.add(ownItem);
                 }
+                UIInit();
             }
         });
 
-        transfer1 = (ImageView) findViewById(R.id.transfer1);
-        transfer1.setVisibility(View.VISIBLE);
-        transfer2 = (ImageView) findViewById(R.id.transfer2);
-        transfer2.setVisibility(View.VISIBLE);
-        trans_out1 = AnimationUtils.loadAnimation(SSell.this, R.anim.trans_out_up);
-        trans_out2 = AnimationUtils.loadAnimation(SSell.this, R.anim.trans_out_down);
-        transfer1.startAnimation(trans_out1);
-        transfer2.startAnimation(trans_out2);
-        trans_out2.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                transfer1.setVisibility(View.GONE);
-                transfer2.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
+        S_Pic = (ImageView) findViewById(R.id.S_Pic);
+        S_Pic.setVisibility(View.GONE);
+        Item_Pic = (ImageView) findViewById(R.id.item_pic);
+        Item_Pic.setVisibility(View.GONE);
+        Item_Name = (TextView) findViewById(R.id.item_name);
+        Item_Name.setVisibility(View.GONE);
         myPagerAdapter = new MyPagerAdapter();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setVisibility(View.GONE);
@@ -184,29 +165,25 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                     case 0:
                         S_Pic.startAnimation(anim4);
                         S_Pic.setImageResource(v1.SourceId1);
-                        Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), v1.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap);
+                        Item_Pic.setImageResource(v1.SourceId2);
                         PagesCount = 1;
                         break;
                     case 1:
                         S_Pic.startAnimation(anim4);
                         S_Pic.setImageResource(v2.SourceId1);
-                        Bitmap bitmap2 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v2.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap2);
+                        Item_Pic.setImageResource(v2.SourceId2);
                         PagesCount = 2;
                         break;
                     case 2:
                         S_Pic.startAnimation(anim4);
                         S_Pic.setImageResource(v3.SourceId1);
-                        Bitmap bitmap3 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v3.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap3);
+                        Item_Pic.setImageResource(v3.SourceId2);
                         PagesCount = 3;
                         break;
                     case 3:
                         S_Pic.startAnimation(anim4);
                         S_Pic.setImageResource(v4.SourceId1);
-                        Bitmap bitmap4 = BitmapFactory.decodeResource(getApplicationContext().getResources(), v4.SourceId2);
-                        Item_Pic.setImageBitmap(bitmap4);
+                        Item_Pic.setImageResource(v4.SourceId2);
                         PagesCount = 4;
                         break;
                 }
@@ -219,6 +196,35 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+
+    }
+
+    public void UIInit() {
+        transfer1 = (ImageView) findViewById(R.id.transfer1);
+        transfer1.setVisibility(View.VISIBLE);
+        transfer2 = (ImageView) findViewById(R.id.transfer2);
+        transfer2.setVisibility(View.VISIBLE);
+        trans_out1 = AnimationUtils.loadAnimation(SSell.this, R.anim.trans_out_up);
+        trans_out2 = AnimationUtils.loadAnimation(SSell.this, R.anim.trans_out_down);
+        transfer1.startAnimation(trans_out1);
+        transfer2.startAnimation(trans_out2);
+        trans_out2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                transfer1.setVisibility(View.GONE);
+                transfer2.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         Pet_Init = (ImageView) findViewById(R.id.pet_init);
         Pet_Init.setVisibility(View.GONE);
@@ -363,13 +369,6 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
         float2 = AnimationUtils.loadAnimation(SSell.this, R.anim.cap_float2);
         float3 = AnimationUtils.loadAnimation(SSell.this, R.anim.cap_float3);
 
-        S_Pic = (ImageView) findViewById(R.id.S_Pic);
-        S_Pic.setVisibility(View.GONE);
-        Item_Pic = (ImageView) findViewById(R.id.item_pic);
-        Item_Pic.setVisibility(View.GONE);
-        Item_Name = (TextView) findViewById(R.id.item_name);
-        Item_Name.setVisibility(View.GONE);
-
         SSell_Message = (TextView) findViewById(R.id.s_message);
         Screen = (ImageView) findViewById(R.id.screen);
 
@@ -390,7 +389,6 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
 
         FirstTouch = true;
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

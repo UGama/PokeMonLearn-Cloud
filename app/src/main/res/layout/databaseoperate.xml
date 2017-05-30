@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/editText"
+        android:hint="请输入密码："
+        android:maxLines="1"
+        android:textSize="24sp"
+        android:inputType="textPassword"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="确定"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        app:layout_heightPercent="90%"
+        android:id="@+id/RecyclerView"
+        android:layout_alignParentBottom="true"
+        />
 
-</LinearLayout>
+</android.support.percent.PercentRelativeLayout>

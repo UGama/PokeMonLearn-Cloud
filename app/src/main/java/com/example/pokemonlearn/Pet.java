@@ -269,6 +269,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                 for (OwnPet ownPet : list) {
                     if (ownPet.getName().equals(Name)) {
                         list.remove(ownPet);
+                        break;
                     }
                 }
                 LinearLayoutManager layoutManager = new LinearLayoutManager(this);

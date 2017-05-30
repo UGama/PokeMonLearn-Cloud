@@ -28,7 +28,7 @@
                 />
             <ImageView
                 android:id="@+id/item_pic"
-                android:background="@drawable/init_ball"
+                android:src="@drawable/init_ball"
                 android:layout_centerHorizontal="true"
                 app:layout_heightPercent="60%"
                 app:layout_widthPercent="90%"
@@ -300,14 +300,12 @@
         android:background="@drawable/transfer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         />
     <ImageView
         android:id="@+id/transfer2"
         android:background="@drawable/transfer2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         />
 
 
