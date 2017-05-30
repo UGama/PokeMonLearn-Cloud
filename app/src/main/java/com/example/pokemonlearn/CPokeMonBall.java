@@ -124,6 +124,7 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
         Item_name = (TextView) findViewById(R.id.item_name);
         Bag_Pic = (ImageView) findViewById(R.id.bag_pic);
         Bag_Pic.setBackgroundResource(R.drawable.init_ball);
+        Bag_Pic.setVisibility(View.VISIBLE);
 
         anim4 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.anim4);
 

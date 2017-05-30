@@ -41,6 +41,7 @@
         <activity android:name=".Capture" />
         <activity android:name=".CPokeMonTool" />
         <activity android:name=".CPokeMonBall" />
+        <activity android:name=".Pet" />
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">

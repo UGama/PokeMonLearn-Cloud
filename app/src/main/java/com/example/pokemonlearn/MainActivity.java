@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);// 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(2000);
+        //option.setScanSpan(2000);
 
         mLocClient.setLocOption(option);
         mLocClient.start();
@@ -973,8 +973,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 overridePendingTransition(0, 0);
                 break;
             case R.id.myPet:
-                //Intent intent2 = new Intent(MainActivity.this, Pet.class);
-                //startActivity(intent2);
+                Intent intent2 = new Intent(MainActivity.this, Pet.class);
+                intent2.putExtra("User", User);
+                startActivity(intent2);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.back:

@@ -37,7 +37,9 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.SaveCallback;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -100,7 +102,6 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
 
     private MediaPlayer mediaPlayer;
 
-    int j = 0;
 
     private Bitmap C_PokeMonBitMap;
 
@@ -318,7 +319,7 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                 Text_Screen.setVisibility(View.VISIBLE);
                 fightMessage.setText("野生的 " + C_PokeMon.getName() + " 出现了！");
                 MessageCount++;
-                //ScreenRun(Text_Screen);
+                ScreenRun(Text_Screen);
 
             }
 
@@ -633,6 +634,8 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                     run.setVisibility(View.GONE);
                     String pmBall = data.getStringExtra("PMBall");
                     String Url = data.getStringExtra("Url");
+                    fightMessage.setText("使用了 " + pmBall + " 。");
+                    ScreenRun(Text_Screen);
                     Log.i("PMBall", pmBall);
                     AVQuery<AVObject> query = new AVQuery<>("PokeMonBall");
                     query.whereEqualTo("Name", pmBall);
@@ -679,11 +682,11 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                             PMBall.setImageBitmap(bitmap);
                             PMBall.setVisibility(View.VISIBLE);
                             ProfileMotion(PMBall);
+
                         }
                     });
 
-                    fightMessage.setText("使用了 " + pmBall + " 。");
-                    ScreenRun(Text_Screen);
+
                 }
                 break;
         }
@@ -1155,11 +1158,12 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
             animSet.playTogether(anim1, anim2);
             animSet.start();
 
-            AVQuery<AVObject> query = new AVQuery<>("OwnPet");
+            AVObject user = AVObject.createWithoutData("Users", User);
+            AVRelation<AVObject> relation = user.getRelation("OwnPet");
+            AVQuery<AVObject> query = relation.getQuery();
             query.findInBackground(new FindCallback<AVObject>() {
                 @Override
                 public void done(List<AVObject> list, AVException e) {
-                    Log.i("OwnPetNumber", String.valueOf(list.size()));
                     boolean Repeat = false;
                     for (AVObject avObject : list) {
                         if (avObject.getString("Name").equals(C_PokeMon.getName())) {
@@ -1172,14 +1176,26 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                     } else {
                         if (list.size() < 9) {
                             MessageCount += 2;
+
+                            final AVObject User1 = AVObject.createWithoutData("Users", User);
                             OwnPet ownPet = new OwnPet("", C_PokeMon.getName(),
                                     C_PokeMon.getImageName2(), C_PokeMon.getNumber(),
                                     C_PokeMonBall.getImageName());
-                            AVObject avObject = new AVObject("OwnPet");
+                            final AVObject avObject = new AVObject("OwnPet");
                             avObject.put("Name", ownPet.getName());
                             avObject.put("ImageName", ownPet.getImageName());
                             avObject.put("Dex", ownPet.getDex());
                             avObject.put("BallImageName", ownPet.getBallImageName());
+
+                            AVObject.saveAllInBackground(Arrays.asList(avObject), new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    AVRelation<AVObject> relation = User1.getRelation("OwnPet");
+                                    relation.add(avObject);
+                                    User1.saveInBackground();
+                                }
+                            });
+
                         } else {
                             MessageCount += 3;
                         }
