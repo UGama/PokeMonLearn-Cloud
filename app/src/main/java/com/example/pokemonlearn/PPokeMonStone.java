@@ -305,11 +305,12 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
                         query.getFirstInBackground(new GetCallback<AVObject>() {
                             @Override
                             public void done(AVObject avObject, AVException e) {
-                                //Intent intent1 = new Intent(PPokeMonStone.this, Evolve.class);
-                                //intent1.putExtra("PMName", P_PokeMon.getName());
-                                //intent1.putExtra("PMStone", PMStone);
-                                //intent1.putExtra("S-PMName", avObject.getString("Name"));
-                                //startActivityForResult(intent1, 5);
+                                Intent intent1 = new Intent(PPokeMonStone.this, Evolve.class);
+                                intent1.putExtra("PMName", P_PokeMon.getName());
+                                intent1.putExtra("PMStone", P_PokeMonStone.getName());
+                                intent1.putExtra("S-PMName", avObject.getString("Name"));
+                                intent1.putExtra("User", User);
+                                startActivityForResult(intent1, 5);
                             }
                         });
                     }
@@ -396,7 +397,7 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
                                             if (able) {
                                                 Toast toast = Toast.makeText(getApplicationContext(),
                                                         Item_name.getText().toString() + " 可以使用。",
-                                                        Toast.LENGTH_LONG);
+                                                        Toast.LENGTH_SHORT);
                                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                                 LinearLayout toastView = (LinearLayout) toast.getView();
                                                 ImageView imageCodeProject = new ImageView(getApplicationContext());
@@ -406,7 +407,7 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
                                             } else {
                                                 Toast toast = Toast.makeText(getApplicationContext(),
                                                         Item_name.getText().toString() + " 不可使用。",
-                                                        Toast.LENGTH_LONG);
+                                                        Toast.LENGTH_SHORT);
                                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                                 LinearLayout toastView = (LinearLayout) toast.getView();
                                                 ImageView imageCodeProject = new ImageView(getApplicationContext());

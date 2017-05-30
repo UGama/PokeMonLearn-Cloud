@@ -113,7 +113,6 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
         Intent intent = getIntent();
         String Name = intent.getStringExtra("Name");
         User = intent.getStringExtra("User");
-        //http://ac-vuvtafsi.clouddn.com/4798581ad30a5d075a9b.png
 
         AVQuery<AVObject> query1 = new AVQuery<>("PM");
         query1.whereEqualTo("Name", Name);
@@ -563,8 +562,9 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
             MessageCount = 8;
             fightMessage.setText("重新检测您的宠物数量...");
             ScreenRun(Text_Screen);
-            //Intent intent = new Intent(Capture.this, Pet.class);
-            //startActivity(intent);
+            Intent intent = new Intent(Capture.this, Pet.class);
+            intent.putExtra("User", User);
+            startActivity(intent);
         }
     }
 
@@ -651,8 +651,8 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
                         }
                     });
 
-                    AVObject User = AVObject.createWithoutData("Users", "592af79a2f301e006c561cd0");
-                    AVRelation<AVObject> relation = User.getRelation("OwnItem");
+                    AVObject User1 = AVObject.createWithoutData("Users", User);
+                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
                     AVQuery<AVObject> query1 = relation.getQuery();
                     query1.whereEqualTo("Name", pmBall);
                     query1.getFirstInBackground(new GetCallback<AVObject>() {

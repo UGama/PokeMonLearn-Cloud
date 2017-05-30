@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -90,6 +89,22 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
 
         list = new ArrayList<>();
 
+        AVQuery<AVObject> query0 = new AVQuery<>("Users");
+        query0.getInBackground(User, new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                AVFile avFile = new AVFile("Scene.png", avObject.getString("Scene"), new HashMap<String, Object>());
+                avFile.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] bytes, AVException e) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        Pet_Init = (ImageView) findViewById(R.id.pet_init);
+                        Pet_Init.setImageBitmap(bitmap);
+                    }
+                });
+            }
+        });
+
         AVObject user = AVObject.createWithoutData("Users", User);
         AVRelation<AVObject> relation = user.getRelation("OwnPet");
         AVQuery<AVObject> query = relation.getQuery();
@@ -147,10 +162,6 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
 
         Pet_Init = (ImageView) findViewById(R.id.pet_init);
         Pet_Init.setVisibility(View.GONE);
-        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-        int pet_init = sharedPreferences.getInt("Scene", R.drawable.pet_init1);
-        Log.i("Scene", String.valueOf(pet_init));
-        Pet_Init.setImageResource(pet_init);
 
         animation2 = AnimationUtils.loadAnimation(Pet.this, R.anim.anim2);
         animation3 = AnimationUtils.loadAnimation(Pet.this, R.anim.anim3);
@@ -222,6 +233,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
             case R.id.learn:
                 Intent intent1 = new Intent(Pet.this, PPokeMonBook.class);
                 intent1.putExtra("PokeMon", Name);
+                intent1.putExtra("User", User);
                 startActivityForResult(intent1, 3);
                 overridePendingTransition(0, 0);
                 break;
@@ -257,6 +269,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                         avObject.deleteInBackground();
                     }
                 });
+                Pet_Pic.setVisibility(View.GONE);
                 AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("放生")
                         .setMessage(Name + " 被放生了！")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -514,6 +527,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                     Layout_Left2.setVisibility(View.GONE);
                     Connect2.setVisibility(View.GONE);
                     FirstTouch = true;
+                    final List<OwnPet> ownPets = new ArrayList<>();
                     AVObject user = AVObject.createWithoutData("Users", User);
                     AVRelation<AVObject> relation = user.getRelation("OwnPet");
                     AVQuery<AVObject> query = relation.getQuery();
@@ -526,15 +540,18 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                                         avObject.getString("ImageName"),
                                         avObject.getInt("Dex"),
                                         avObject.getString("BallImageName"));
-                                list.add(ownPet);
+                                ownPets.add(ownPet);
                                 Log.i("Name", ownPet.getName());
                             }
                         }
                     });
                     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
                     recyclerView.setLayoutManager(layoutManager);
-                    OwnPetAdapter adapter = new OwnPetAdapter(list);
+                    OwnPetAdapter adapter = new OwnPetAdapter(ownPets);
                     recyclerView.setAdapter(adapter);
+                    Free.setVisibility(View.GONE);
+                    Evolve.setVisibility(View.GONE);
+                    Learn.setVisibility(View.GONE);
                 }
         }
     }

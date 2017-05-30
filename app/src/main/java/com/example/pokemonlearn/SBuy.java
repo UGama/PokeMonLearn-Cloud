@@ -511,10 +511,31 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                         if (MyCoin >= Price) {
                             MyCoin -= Price;
                             SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                            editor.putInt("Scene", SceneResource);
                             editor.putInt("Coins", MyCoin);
                             editor.apply();
-                            Log.i("Scene", String.valueOf(SceneResource));
+                            AVQuery<AVObject> query5 = new AVQuery<>("Scene");
+                            query5.whereEqualTo("Number", Integer.valueOf(ChoseName));
+                            query5.getFirstInBackground(new GetCallback<AVObject>() {
+                                @Override
+                                public void done(AVObject avObject, AVException e) {
+                                    AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("_File");
+                                    avObjectAVQuery.whereEqualTo("name", avObject.getString("ImageName") + ".png");
+                                    avObjectAVQuery.getFirstInBackground(new GetCallback<AVObject>() {
+                                        @Override
+                                        public void done(AVObject avObject, AVException e) {
+                                            final String Url = avObject.getString("url");
+                                            AVQuery<AVObject> query = new AVQuery<>("Users");
+                                            query.getInBackground(User, new GetCallback<AVObject>() {
+                                                @Override
+                                                public void done(AVObject avObject, AVException e) {
+                                                    avObject.put("Scene", Url);
+                                                    avObject.saveInBackground();
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
                             AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("恭喜")
                                     .setMessage("购买成功！")
                                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {

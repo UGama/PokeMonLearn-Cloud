@@ -84,6 +84,7 @@ public class PPokeMonBook extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         Name = intent.getStringExtra("PokeMon");
         User = intent.getStringExtra("User");
+
         ownPets = new ArrayList<>();
         AVObject user = AVObject.createWithoutData("Users", User);
         AVRelation<AVObject> relation = user.getRelation("OwnPet");
