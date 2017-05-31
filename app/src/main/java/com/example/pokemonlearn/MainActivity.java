@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
         Intent intent1 = new Intent(MainActivity.this, MusicServer.class);
         startService(intent1);
+
         transfer1 = (ImageView) findViewById(R.id.transfer1);
         transfer2 = (ImageView) findViewById(R.id.transfer2);
         trans_out1 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.trans_out_up);

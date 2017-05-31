@@ -27,6 +27,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -37,6 +38,7 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +108,9 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
     private Button D_Cancel;
     private int number;//(Sell Count)
     private int NumberInBag;
+
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -389,6 +394,9 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
         D_Cancel.setOnClickListener(this);
 
         FirstTouch = true;
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
     @Override
     public void onClick(View v) {
@@ -673,7 +681,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.bag_item_item, parent, false);
             final ViewHolder holder = new ViewHolder(view);
@@ -681,6 +689,8 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
             holder.ItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Support.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     TextView Name = (TextView) v.findViewById(R.id.name);
                     ChoseName = Name.getText().toString();
                     AVQuery<AVObject> query = new AVQuery<>("OwnItem");
@@ -701,6 +711,14 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                         public void done(byte[] bytes, AVException e) {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             Item_Pic.setImageBitmap(bitmap);
+                                        }
+                                    }, new ProgressCallback() {
+                                        @Override
+                                        public void done(Integer integer) {
+                                            if (integer == 100) {
+                                                Support.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
+                                            }
                                         }
                                     });
                                 }

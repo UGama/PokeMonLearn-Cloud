@@ -27,6 +27,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -37,6 +38,7 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 
 import java.util.ArrayList;
@@ -109,11 +111,14 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
     private int NumberInDex;
     private int SceneResource;
 
-    List<Item> items1;
-    List<Item> items2;
-    List<Item> items3;
-    List<Item> items4;
-    List<Item> items5;
+    private List<Item> items1;
+    private List<Item> items2;
+    private List<Item> items3;
+    private List<Item> items4;
+    private List<Item> items5;
+
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -490,6 +495,9 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
         D_Cancel = (Button) findViewById(R.id.d_cancel);
         D_Cancel.setOnTouchListener(this);
         D_Cancel.setOnClickListener(this);
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
 
     @Override
@@ -889,6 +897,8 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
             holder.ItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Support.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     TextView Name = (TextView) v.findViewById(R.id.name);
                     ChoseName = Name.getText().toString();
                     if (FirstTouch) {
@@ -915,12 +925,21 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                         public void done(AVObject avObject, AVException e) {
                                             AVFile avFile = new AVFile("Item.png", avObject.getString("url"), new HashMap<String, Object>());
                                             avFile.getDataInBackground(new GetDataCallback() {
-                                                @Override
-                                                public void done(byte[] bytes, AVException e) {
-                                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                    Item_Pic.setImageBitmap(bitmap);
-                                                }
-                                            });
+                                                                           @Override
+                                                                           public void done(byte[] bytes, AVException e) {
+                                                                               Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                                               Item_Pic.setImageBitmap(bitmap);
+                                                                           }
+                                                                       }, new ProgressCallback() {
+                                                                           @Override
+                                                                           public void done(Integer integer) {
+                                                                               if (integer == 100) {
+                                                                                   Support.setVisibility(View.GONE);
+                                                                                   progressBar.setVisibility(View.GONE);
+                                                                               }
+                                                                           }
+                                                                       }
+                                            );
                                         }
                                     });
                                 }
@@ -946,6 +965,14 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                                 public void done(byte[] bytes, AVException e) {
                                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                                     Item_Pic.setImageBitmap(bitmap);
+                                                }
+                                            }, new ProgressCallback() {
+                                                @Override
+                                                public void done(Integer integer) {
+                                                    if (integer == 100) {
+                                                        Support.setVisibility(View.GONE);
+                                                        progressBar.setVisibility(View.GONE);
+                                                    }
                                                 }
                                             });
                                         }
@@ -974,6 +1001,14 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                                     Item_Pic.setImageBitmap(bitmap);
                                                 }
+                                            }, new ProgressCallback() {
+                                                @Override
+                                                public void done(Integer integer) {
+                                                    if (integer == 100) {
+                                                        Support.setVisibility(View.GONE);
+                                                        progressBar.setVisibility(View.GONE);
+                                                    }
+                                                }
                                             });
                                         }
                                     });
@@ -1001,6 +1036,14 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                                     Item_Pic.setImageBitmap(bitmap);
                                                 }
+                                            }, new ProgressCallback() {
+                                                @Override
+                                                public void done(Integer integer) {
+                                                    if (integer == 100) {
+                                                        Support.setVisibility(View.GONE);
+                                                        progressBar.setVisibility(View.GONE);
+                                                    }
+                                                }
                                             });
                                         }
                                     });
@@ -1026,6 +1069,14 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                                 public void done(byte[] bytes, AVException e) {
                                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                                     Pet_Init.setImageBitmap(bitmap);
+                                                }
+                                            }, new ProgressCallback() {
+                                                @Override
+                                                public void done(Integer integer) {
+                                                    if (integer == 100) {
+                                                        Support.setVisibility(View.GONE);
+                                                        progressBar.setVisibility(View.GONE);
+                                                    }
                                                 }
                                             });
                                         }

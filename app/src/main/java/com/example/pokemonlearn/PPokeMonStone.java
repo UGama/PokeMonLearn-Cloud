@@ -23,6 +23,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +88,9 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
     private Animation Text_Show;
 
     private Animation animation4;
+
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -256,6 +261,9 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
         FirstTouch = true;
 
         animation4 = AnimationUtils.loadAnimation(PPokeMonStone.this, R.anim.pc_series_show);
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
     @Override
     public void onClick(View v) {
@@ -366,6 +374,8 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
             holder.ItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Support.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     TextView Name = (TextView) v.findViewById(R.id.name);
                     String name = Name.getText().toString();
                     for (OwnItem ownItem : list) {
@@ -414,6 +424,14 @@ public class PPokeMonStone extends AppCompatActivity implements View.OnClickList
                                                 imageCodeProject.setImageBitmap(bitmap);
                                                 toastView.addView(imageCodeProject, 0);
                                                 toast.show();
+                                            }
+                                        }
+                                    }, new ProgressCallback() {
+                                        @Override
+                                        public void done(Integer integer) {
+                                            if (integer == 100) {
+                                                Support.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
                                             }
                                         }
                                     });

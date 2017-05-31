@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -29,6 +30,7 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +79,9 @@ public class Bag extends AppCompatActivity implements View.OnClickListener {
 
     private int PagesCount;
 
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
+
     @Override
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,9 +110,6 @@ public class Bag extends AppCompatActivity implements View.OnClickListener {
                 UIInit();
             }
         });
-
-
-
 
 
     }
@@ -286,6 +288,9 @@ public class Bag extends AppCompatActivity implements View.OnClickListener {
         layout_down = (PercentRelativeLayout) findViewById(R.id.bag_layout_down);
         layout_in = AnimationUtils.loadAnimation(Bag.this, R.anim.anim3);
         layout_down.startAnimation(layout_in);
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
 
     @Override
@@ -420,6 +425,8 @@ public class Bag extends AppCompatActivity implements View.OnClickListener {
             holder.ItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Support.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     TextView Name = (TextView) v.findViewById(R.id.name);
                     ChoseName = Name.getText().toString();
                     Item_name.setText(ChoseName);
@@ -437,6 +444,14 @@ public class Bag extends AppCompatActivity implements View.OnClickListener {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             Bag_Pic.setImageBitmap(bitmap);
                                             Bag_Pic.startAnimation(anim4);
+                                        }
+                                    }, new ProgressCallback() {
+                                        @Override
+                                        public void done(Integer integer) {
+                                            if (integer == 100) {
+                                                Support.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
+                                            }
                                         }
                                     });
                                 }

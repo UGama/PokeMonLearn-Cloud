@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -28,6 +29,7 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +63,9 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
     private Animation float3;
 
     private boolean FirstTouch;
+
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,6 +151,9 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
         Cancel.setVisibility(View.GONE);
         float2 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.cap_float2);
         float3 = AnimationUtils.loadAnimation(CPokeMonBall.this, R.anim.cap_float3);
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
 
     @Override
@@ -214,6 +222,8 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
             holder.ItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Support.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     TextView Name = (TextView) v.findViewById(R.id.name);
                     String name = Name.getText().toString();
                     for (OwnItem ownItem : ownItems) {
@@ -234,6 +244,14 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             Bag_Pic.setImageBitmap(bitmap);
                                             Bag_Pic.startAnimation(anim4);
+                                        }
+                                    }, new ProgressCallback() {
+                                        @Override
+                                        public void done(Integer integer) {
+                                            if (integer == 100) {
+                                                Support.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
+                                            }
                                         }
                                     });
                                 }

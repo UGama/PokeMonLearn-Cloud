@@ -25,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -35,6 +36,7 @@ import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,6 +80,9 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
 
     private TextView Pet_Message;
     private ImageView Screen;
+
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -335,7 +340,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.pet_item, parent, false);
             final ViewHolder holder = new ViewHolder(view);
@@ -372,6 +377,8 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                             Up_Down(new_arrow);
                         }
                     }
+                    Support.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     TextView name = (TextView) v.findViewById(R.id.pet_name);
                     Name = name.getText().toString();
                     for (OwnPet ownPet : list) {
@@ -388,6 +395,14 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                                         public void done(byte[] bytes, AVException e) {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             Pet_Pic.setImageBitmap(bitmap);
+                                        }
+                                    }, new ProgressCallback() {
+                                        @Override
+                                        public void done(Integer integer) {
+                                            if (integer == 100) {
+                                                Support.setVisibility(View.GONE);
+                                                parent.setVisibility(View.GONE);
+                                            }
                                         }
                                     });
                                 }

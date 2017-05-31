@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -24,6 +25,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +73,9 @@ public class PokeDex extends AppCompatActivity implements View.OnClickListener {
     private Animation trans_out2;
 
     private Animation anim4;
+
+    private PercentRelativeLayout Support;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -212,6 +217,9 @@ public class PokeDex extends AppCompatActivity implements View.OnClickListener {
         DOWN.startAnimation(Right);
         Decorate = (ImageView) findViewById(R.id.pokeDex_decorate);
         Decorate.startAnimation(Right);
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
 
     @Override
@@ -242,6 +250,8 @@ public class PokeDex extends AppCompatActivity implements View.OnClickListener {
             holder.PetItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    Support.setVisibility(View.VISIBLE);
                     PokemonName = (TextView) v.findViewById(R.id.pokedex_name);
                     ChoseName = PokemonName.getText().toString();
                     Log.i("Name", ChoseName);
@@ -257,17 +267,27 @@ public class PokeDex extends AppCompatActivity implements View.OnClickListener {
                                 public void done(AVObject avObject, AVException e) {
                                     AVFile avFile = new AVFile("PokeMon.png", avObject.getString("url"), new HashMap<String, Object>());
                                     avFile.getDataInBackground(new GetDataCallback() {
+                                                                   @Override
+                                                                   public void done(byte[] bytes, AVException e) {
+                                                                       Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                                       anim4 = AnimationUtils.loadAnimation(PokeDex.this, R.anim.anim4);
+                                                                       PokeDex_init.setImageBitmap(bitmap);
+                                                                       PokeDex_init.startAnimation(anim4);
+                                                                       PokeDex_name.setText(ChoseName);
+                                                                       times = 4;
+                                                                       flash2.startAnimation(Flash);
+                                                                   }
+                                                               }, new ProgressCallback() {
                                         @Override
-                                        public void done(byte[] bytes, AVException e) {
-                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                            anim4 = AnimationUtils.loadAnimation(PokeDex.this, R.anim.anim4);
-                                            PokeDex_init.setImageBitmap(bitmap);
-                                            PokeDex_init.startAnimation(anim4);
-                                            PokeDex_name.setText(ChoseName);
-                                            times = 4;
-                                            flash2.startAnimation(Flash);
+                                        public void done(Integer integer) {
+                                            if (integer == 100) {
+                                                Log.i("Test", "100");
+                                                progressBar.setVisibility(View.GONE);
+                                                Support.setVisibility(View.GONE);
+                                            }
                                         }
-                                    });
+                                                               }
+                                    );
                                 }
                             });
                         }
