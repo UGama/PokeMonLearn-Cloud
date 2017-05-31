@@ -53,6 +53,28 @@
         <activity android:name=".PokeDex" />
 
         <service android:name="com.avos.avoscloud.PushService"/>
+
+        <service android:name=".MusicServer">
+            <intent-filter>
+                <action android:name="com.angel.Android.MUSIC"/>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".CaptureMusicServer">
+            <intent-filter>
+                <action android:name="com.angel.Android.MUSIC"/>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".ShopMusicServer">
+            <intent-filter>
+                <action android:name="com.angel.Android.MUSIC"/>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </service>
+
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

@@ -257,7 +257,7 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Vie
         Cast.setVisibility(View.GONE);
 
         Intent intent0 = new Intent(Shop.this, ShopMusicServer.class);
-        startService(intent);
+        startService(intent0);
     }
 
     public void CoinShow() {
