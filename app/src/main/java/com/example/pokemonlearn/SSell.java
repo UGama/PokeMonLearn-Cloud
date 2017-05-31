@@ -56,6 +56,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
     private String User;
     private List<OwnItem> ownItems;
     private String ChoseName;
+    private int MyCoin;
 
     private PercentRelativeLayout Layout_Left1;
     private PercentRelativeLayout Layout_Left2;
@@ -140,9 +141,9 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
         Item_Pic.setVisibility(View.GONE);
         Item_Name = (TextView) findViewById(R.id.item_name);
         Item_Name.setVisibility(View.GONE);
-        myPagerAdapter = new MyPagerAdapter();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setVisibility(View.GONE);
+        myPagerAdapter = new MyPagerAdapter();
         viewPager.setAdapter(myPagerAdapter);
         indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
         indicator.setLength(myPagerAdapter.List.size());
@@ -424,7 +425,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                     Dialog_Show();
                 } else {
                     SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
-                    int MyCoin = preferences.getInt("Coins", 0);
+                    MyCoin = preferences.getInt("Coins", 0);
                     String item_name = Item_Name.getText().toString();
                     switch (PagesCount) {
                         case 1:
@@ -434,6 +435,10 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
+                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                    MyCoin += number * Price / 2;
+                                    editor.putInt("Coins", MyCoin);
+                                    editor.apply();
                                 }
                             });
                             break;
@@ -444,6 +449,10 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
+                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                    MyCoin += number * Price / 2;
+                                    editor.putInt("Coins", MyCoin);
+                                    editor.apply();
                                 }
                             });
                             break;
@@ -454,6 +463,10 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
+                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                    MyCoin += number * Price / 2;
+                                    editor.putInt("Coins", MyCoin);
+                                    editor.apply();
                                 }
                             });
                             break;
@@ -464,14 +477,14 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
+                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                    MyCoin += number * Price / 2;
+                                    editor.putInt("Coins", MyCoin);
+                                    editor.apply();
                                 }
                             });
                             break;
                     }
-                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                    MyCoin += number * Price / 2;
-                    editor.putInt("Coins", MyCoin);
-                    editor.apply();
                     if (number == NumberInBag) {
                         AVQuery<AVObject> avQuery = new AVQuery<>("OwnItem");
                         avQuery.whereEqualTo("Name", item_name);
@@ -503,6 +516,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                     editText.setText("");
                                 }
                             }).show();
+                    Sell.setBackgroundResource(R.drawable.s_sell);
                     SSell_Message.setText("");
                     FirstTouch = true;
                     MessageCount = 0;

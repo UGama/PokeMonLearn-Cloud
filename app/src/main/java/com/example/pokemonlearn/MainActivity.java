@@ -536,9 +536,10 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    //intent3.putExtra("Name", pokeMonName);
-                                    //startActivity(intent3);
+                                    Intent intent3 = new Intent(MainActivity.this, Capture.class);
+                                    intent3.putExtra("Name", Name[0]);
+                                    intent3.putExtra("User", User);
+                                    startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
                                     for (int i = 0; i < 4; i++) {
@@ -623,10 +624,10 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //String pokeMonName = Pokemon[1].getName();
-                                    //Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    //intent3.putExtra("Name", pokeMonName);
-                                    //startActivity(intent3);
+                                    Intent intent3 = new Intent(MainActivity.this, Capture.class);
+                                    intent3.putExtra("Name", Name[1]);
+                                    intent3.putExtra("User", User);
+                                    startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
                                     for (int i = 0; i < 4; i++) {
@@ -710,10 +711,10 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //String pokeMonName = Pokemon[2].getName();
-                                    //Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    //intent3.putExtra("Name", pokeMonName);
-                                    //startActivity(intent3);
+                                    Intent intent3 = new Intent(MainActivity.this, Capture.class);
+                                    intent3.putExtra("Name", Name[2]);
+                                    intent3.putExtra("User", User);
+                                    startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
                                     for (int i = 0; i < 4; i++) {
@@ -797,10 +798,10 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //String pokeMonName = Pokemon[3].getName();
-                                    //Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    //intent3.putExtra("Name", pokeMonName);
-                                    //startActivity(intent3);
+                                    Intent intent3 = new Intent(MainActivity.this, Capture.class);
+                                    intent3.putExtra("Name", Name[3]);
+                                    intent3.putExtra("User", User);
+                                    startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
                                     for (int i = 0; i < 4; i++) {
@@ -884,10 +885,10 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    //String pokeMonName = Pokemon[4].getName();
-                                    //Intent intent3 = new Intent(MainActivity.this, Capture.class);
-                                    //intent3.putExtra("Name", pokeMonName);
-                                    //startActivity(intent3);
+                                    Intent intent3 = new Intent(MainActivity.this, Capture.class);
+                                    intent3.putExtra("Name", Name[4]);
+                                    intent3.putExtra("User", User);
+                                    startActivity(intent3);
                                     overridePendingTransition(0, 0);
                                     transit = AnimationUtils.loadAnimation(MainActivity.this, R.anim.transit);
                                     for (int i = 0; i < 4; i++) {
@@ -925,8 +926,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setting:
-                //Intent intent = new Intent(MainActivity.this, Setting.class);
-                //startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, Setting.class);
+                startActivity(intent);
                 break;
             case R.id.littlemap:
                 /*MenuLayout.setVisibility(View.GONE);
@@ -1118,11 +1119,12 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 overridePendingTransition(0, 0);
                 break;
             case R.id.pe:
-                //Intent intent4 = new Intent(MainActivity.this, Evolve.class);
-                //intent4.putExtra("PMName", "伊布");
-                //intent4.putExtra("PMStone", "火之石");
-                //intent4.putExtra("S-PMName", "火精灵");
-                //startActivity(intent4);
+                Intent intent4 = new Intent(MainActivity.this, Evolve.class);
+                intent4.putExtra("PMName", "伊布");
+                intent4.putExtra("PMStone", "火之石");
+                intent4.putExtra("S-PMName", "火精灵");
+                intent4.putExtra("User", User);
+                startActivity(intent4);
                 break;
         }
     }
@@ -1305,7 +1307,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            // map view 销毁后不在处理新接收的位置
+
             if (location == null || mMapView == null)
                 return;
             myLocation = location;

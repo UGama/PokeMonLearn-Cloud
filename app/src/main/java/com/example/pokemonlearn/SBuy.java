@@ -580,7 +580,7 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                 break;
             case R.id.d_confirm:
                 number = Integer.valueOf(editText.getText().toString());
-                if (number <= 0) {
+                if (number <= 0 || editText.getText().toString().equals("")) {
                     Dialog_Show();
                 } else {
                     SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
@@ -725,6 +725,10 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                     }
                                 })
                                 .show();
+                        MessageCount = 0;
+                        Buy.setBackgroundResource(R.drawable.s_buy);
+                        SBuy_Message.setText("");
+                        FirstTouch = true;
                     } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("抱歉")
                                 .setMessage("余额不足请充值。")
@@ -735,6 +739,10 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                                     }
                                 })
                                 .show();
+                        MessageCount = 0;
+                        Buy.setBackgroundResource(R.drawable.s_buy);
+                        SBuy_Message.setText("");
+                        FirstTouch = true;
                     }
                 }
                 break;
