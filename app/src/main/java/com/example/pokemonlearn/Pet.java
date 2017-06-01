@@ -230,6 +230,9 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
 
         Pet_Message = (TextView) findViewById(R.id.pet_message);
         Screen = (ImageView) findViewById(R.id.screen);
+
+        Support = (PercentRelativeLayout) findViewById(R.id.Support);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
     }
 
     @Override
@@ -355,6 +358,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                         Free.startAnimation(float3);
                         Evolve.startAnimation(float1);
                         Learn.startAnimation(float2);
+                        Pet_Pic.setVisibility(View.VISIBLE);
                         Layout_Left2.setVisibility(View.VISIBLE);
                         Connect2.setVisibility(View.VISIBLE);
                         TempView = v;
@@ -401,7 +405,7 @@ public class Pet extends AppCompatActivity implements View.OnClickListener, View
                                         public void done(Integer integer) {
                                             if (integer == 100) {
                                                 Support.setVisibility(View.GONE);
-                                                parent.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
                                             }
                                         }
                                     });

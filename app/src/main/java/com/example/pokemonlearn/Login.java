@@ -8,8 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -41,10 +44,38 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText UserName;
     private EditText PassWord;
     private Button Login;
+    private ImageView transfer1;
+    private ImageView transfer2;
+    private Animation trans_out1;
+    private Animation trans_out2;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        transfer1 = (ImageView) findViewById(R.id.transfer1);
+        transfer1.setVisibility(View.VISIBLE);
+        transfer2 = (ImageView) findViewById(R.id.transfer2);
+        transfer2.setVisibility(View.VISIBLE);
+        trans_out1 = AnimationUtils.loadAnimation(Login.this, R.anim.trans_out_up);
+        trans_out2 = AnimationUtils.loadAnimation(Login.this, R.anim.trans_out_down);
+        trans_out2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                transfer1.setVisibility(View.GONE);
+                transfer2.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         DataInit();
 
@@ -180,6 +211,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             bitmaps[j] = BitmapFactory.decodeByteArray(Bytes[j], 0, Bytes[j].length);
             Log.i("Test1", String.valueOf(j));
         }
+        transfer1.startAnimation(trans_out1);
+        transfer2.startAnimation(trans_out2);
     }
 
     @Override
@@ -199,6 +232,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 intent.putExtra("Url5", Url[4]);
                 intent.putExtra("User", "592af79a2f301e006c561cd0");
                 startActivity(intent);
+                overridePendingTransition(0, 0);
                 break;
         }
     }
