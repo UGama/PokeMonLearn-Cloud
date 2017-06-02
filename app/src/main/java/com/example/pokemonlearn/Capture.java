@@ -358,11 +358,13 @@ public class Capture extends AppCompatActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.bag:
                 Intent intent1 = new Intent(Capture.this, CPokeMonTool.class);
+                intent1.putExtra("User", User);
                 startActivityForResult(intent1, 1);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.pokemonBall:
                 Intent intent2 = new Intent(Capture.this, CPokeMonBall.class);
+                intent2.putExtra("User", User);
                 startActivityForResult(intent2, 2);
                 overridePendingTransition(0, 0);
                 break;

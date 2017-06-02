@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         mBaiduMap.setMyLocationEnabled(true);
         mBaiduMap.setMaxAndMinZoomLevel(20f, 19f);
 
-        //mBaiduMap.getUiSettings().setScrollGesturesEnabled(false);
+        mBaiduMap.getUiSettings().setScrollGesturesEnabled(false);
 
         myLocationConfiguration = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING,
                 true, null);
@@ -215,9 +215,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         mLocClient.registerLocationListener(myListener);
 
         LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true);// 打开gps
-        option.setCoorType("bd09ll"); // 设置坐标类型
-        //option.setScanSpan(2000);
+        option.setOpenGps(true);
+        option.setCoorType("bd09ll");
+        option.setScanSpan(2000);
 
         mLocClient.setLocOption(option);
         mLocClient.start();

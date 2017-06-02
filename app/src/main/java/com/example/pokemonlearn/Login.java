@@ -1,10 +1,12 @@
 package com.example.pokemonlearn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,8 @@ import java.util.List;
  */
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
+    private String Name;
+    private String Password;
 
     private List<PokeMon> pokeMons;
     private PokeMon[] Pokemon;
@@ -43,11 +47,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private EditText UserName;
     private EditText PassWord;
+    private Button Register;
     private Button Login;
     private ImageView transfer1;
     private ImageView transfer2;
     private Animation trans_out1;
     private Animation trans_out2;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +89,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Login.setOnClickListener(this);
         UserName = (EditText) findViewById(R.id.UserName);
         PassWord = (EditText) findViewById(R.id.PassWord);
+        Register = (Button) findViewById(R.id.register);
+        Register.setOnClickListener(this);
 
     }
 
@@ -219,20 +227,61 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login:
-                Intent intent = new Intent(Login.this, MainActivity.class);
-                intent.putExtra("Name1", name[0]);
-                intent.putExtra("Name2", name[1]);
-                intent.putExtra("Name3", name[2]);
-                intent.putExtra("Name4", name[3]);
-                intent.putExtra("Name5", name[4]);
-                intent.putExtra("Url1", Url[0]);
-                intent.putExtra("Url2", Url[1]);
-                intent.putExtra("Url3", Url[2]);
-                intent.putExtra("Url4", Url[3]);
-                intent.putExtra("Url5", Url[4]);
-                intent.putExtra("User", "592af79a2f301e006c561cd0");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
+                Name = UserName.getText().toString();
+                Password = PassWord.getText().toString();
+                AVQuery<AVObject> query = new AVQuery<>("Users");
+                query.whereEqualTo("UserName", Name);
+                query.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> list, AVException e) {
+                        if (list.size() == 0) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(Login.this).setTitle("错误")
+                                    .setMessage("用户不存在！")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            if (Password.equals(list.get(0).getString("PassWord"))) {
+                                transfer1.setVisibility(View.VISIBLE);
+                                transfer2.setVisibility(View.VISIBLE);
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                intent.putExtra("Name1", name[0]);
+                                intent.putExtra("Name2", name[1]);
+                                intent.putExtra("Name3", name[2]);
+                                intent.putExtra("Name4", name[3]);
+                                intent.putExtra("Name5", name[4]);
+                                intent.putExtra("Url1", Url[0]);
+                                intent.putExtra("Url2", Url[1]);
+                                intent.putExtra("Url3", Url[2]);
+                                intent.putExtra("Url4", Url[3]);
+                                intent.putExtra("Url5", Url[4]);
+                                intent.putExtra("User", list.get(0).getObjectId());
+                                startActivity(intent);
+                                overridePendingTransition(0, 0);
+                                finish();
+                            } else {
+                                AlertDialog alertDialog = new AlertDialog.Builder(Login.this).setTitle("错误")
+                                        .setMessage("密码错误！")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }
+                    }
+                });
+
+                break;
+            case R.id.register:
+                Intent intent1 = new Intent(Login.this, Register.class);
+                startActivity(intent1);
                 break;
         }
     }

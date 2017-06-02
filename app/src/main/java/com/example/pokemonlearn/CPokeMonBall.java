@@ -72,9 +72,12 @@ public class CPokeMonBall extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pc_series);
 
+        Intent intent = getIntent();
+        User = intent.getStringExtra("User");
+
         ownItems = new ArrayList<>();
-        AVObject User = AVObject.createWithoutData("Users", "592af79a2f301e006c561cd0");
-        AVRelation<AVObject> relation = User.getRelation("OwnItem");
+        AVObject user = AVObject.createWithoutData("Users", User);
+        AVRelation<AVObject> relation = user.getRelation("OwnItem");
         AVQuery<AVObject> query = relation.getQuery();
         query.whereEqualTo("Type", 1);
         query.findInBackground(new FindCallback<AVObject>() {

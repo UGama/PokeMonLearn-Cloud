@@ -43,16 +43,16 @@
         />
 
     <Button
-        android:id="@+id/login"
-        android:text="登录"
+        android:id="@+id/register"
+        android:text="注册"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_marginTopPercent="60%"
         app:layout_marginLeftPercent="25%"
         />
     <Button
-        android:id="@+id/register"
-        android:text="注册"
+        android:id="@+id/cancel"
+        android:text="取消"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -72,6 +72,19 @@
         android:ems="10"
         android:inputType="textPassword"
         app:layout_marginTopPercent="2%"
+        />
+    <EditText
+        android:id="@+id/Confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/PassWord"
+        android:layout_centerHorizontal="true"
+        android:hint="请确认密码"
+        android:textSize="24sp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_marginTopPercent="2%"
+        app:layout_widthPercent="80%"
         />
 
     <ImageView
