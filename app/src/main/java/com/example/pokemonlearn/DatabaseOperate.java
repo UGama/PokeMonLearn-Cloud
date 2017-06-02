@@ -1,5 +1,6 @@
 package com.example.pokemonlearn;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVRelation;
-import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.List;
 
 public class DatabaseOperate extends AppCompatActivity {
 
+    private String User;
 
     private RecyclerView recyclerView;
 
@@ -44,7 +46,7 @@ public class DatabaseOperate extends AppCompatActivity {
     }
 
     public void AddEevee() {
-        final AVObject User1 = AVObject.createWithoutData("Users", "592af79a2f301e006c561cd0");
+        final AVObject User1 = AVObject.createWithoutData("Users", User);
         OwnPet ownPet = new OwnPet("", "伊布", "eevee2", 18, "pokeball");
         final AVObject avObject = new AVObject("OwnPet");
         avObject.put("Name", ownPet.getName());
@@ -63,81 +65,20 @@ public class DatabaseOperate extends AppCompatActivity {
     }
 
     public void AddItem() {
-        final AVObject User1 = AVObject.createWithoutData("Users", "592af79a2f301e006c561cd0");
-
-        final List<AVObject> avObjects1 = new ArrayList<>();
-        AVQuery<AVObject> query1 = new AVQuery<>("PokeMonBall");
-        query1.findInBackground(new FindCallback<AVObject>() {
+        AVQuery<AVObject> query = new AVQuery<>("PokeMonStone");
+        query.whereEqualTo("Name", "火之石");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                for (AVObject avObject : list) {
-                    final AVObject avObject1 = new AVObject("OwnItem");
-                    avObject1.put("Name", avObject.getString("Name"));
-                    avObject1.put("ImageName", avObject.getString("ImageName"));
-                    avObject1.put("Dex", avObject.getInt("Number"));
-                    avObject1.put("Type", 1);
-                    avObject1.put("Number", 99);
-
-                    avObjects1.add(avObject1);
-                }
-            }
-        });
-        AVQuery<AVObject> query2 = new AVQuery<>("PokeMonTool");
-        query2.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                for (AVObject avObject : list) {
-                    final AVObject avObject1 = new AVObject("OwnItem");
-                    avObject1.put("Name", avObject.getString("Name"));
-                    avObject1.put("ImageName", avObject.getString("ImageName"));
-                    avObject1.put("Dex", avObject.getInt("Number"));
-                    avObject1.put("Type", 2);
-                    avObject1.put("Number", 99);
-
-                    avObjects1.add(avObject1);
-                }
-            }
-        });
-        AVQuery<AVObject> query3 = new AVQuery<>("PokeMonStone");
-        query3.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                for (AVObject avObject : list) {
-                    final AVObject avObject1 = new AVObject("OwnItem");
-                    avObject1.put("Name", avObject.getString("Name"));
-                    avObject1.put("ImageName", avObject.getString("ImageName"));
-                    avObject1.put("Dex", avObject.getInt("Number"));
-                    avObject1.put("Type", 3);
-                    avObject1.put("Number", 99);
-
-                    avObjects1.add(avObject1);
-                }
-            }
-        });
-        AVQuery<AVObject> query4 = new AVQuery<>("PokeMonBook");
-        query4.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                for (AVObject avObject : list) {
-                    final AVObject avObject1 = new AVObject("OwnItem");
-                    avObject1.put("Name", avObject.getString("Name"));
-                    avObject1.put("ImageName", avObject.getString("ImageName"));
-                    avObject1.put("Dex", avObject.getInt("Number"));
-                    avObject1.put("Type", 4);
-                    avObject1.put("Number", 99);
-
-                    avObjects1.add(avObject1);
-                }
-            }
-        });
-
-        AVObject.saveAllInBackground(avObjects1, new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                AVRelation<AVObject> relation = User1.getRelation("OwnItem");
-                relation.addAll(avObjects1);
-                Log.i("Test", String.valueOf(avObjects1.size()));
-                User1.saveInBackground();
+            public void done(AVObject avObject, AVException e) {
+                AVObject avObject0 = AVObject.createWithoutData("Users", User);
+                AVRelation<AVObject> relation = avObject0.getRelation("OwnItem");
+                AVObject avObject1 = new AVObject("OwnItem");
+                avObject1.put("Name", "火之石");
+                avObject1.put("Number", 1);
+                avObject1.put("ImageName", avObject.getString("ImageName"));
+                avObject1.put("Dex", avObject.getInt("Number"));
+                avObject1.put("Type", 1);
+                relation.add(avObject1);
             }
         });
     }
@@ -147,14 +88,17 @@ public class DatabaseOperate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.databaseoperate);
 
+        Intent intent = getIntent();
+        User = intent.getStringExtra("User");
+
         recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         List<DatabaseButton> list = new ArrayList<>();
-        DatabaseButton b1 = new DatabaseButton("加钱", 1);
-        DatabaseButton b2 = new DatabaseButton("来只伊布", 2);
-        DatabaseButton b3 = new DatabaseButton("全道具*99", 3);
+        DatabaseButton b1 = new DatabaseButton("＋1000钱", 1);
+        DatabaseButton b2 = new DatabaseButton("伊布＋", 2);
+        DatabaseButton b3 = new DatabaseButton("火之石＋", 3);
 
         list.add(b1);
         list.add(b2);

@@ -429,7 +429,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                 break;
             case R.id.d_confirm:
                 number = Integer.valueOf(editText.getText().toString());
-                if (number < 0 || number > NumberInBag) {
+                if (number < 0 || number > NumberInBag || editText.getText().toString().equals("")) {
                     Dialog_Show();
                 } else {
                     SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
@@ -502,7 +502,7 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 avObject.deleteInBackground();
                             }
                         });
-                    }else {
+                    } else {
                         AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("OwnItem");
                         avObjectAVQuery.whereEqualTo("Name", item_name);
                         avObjectAVQuery.getFirstInBackground(new GetCallback<AVObject>() {

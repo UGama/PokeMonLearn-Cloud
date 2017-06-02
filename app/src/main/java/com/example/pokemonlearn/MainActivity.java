@@ -2,12 +2,14 @@ package com.example.pokemonlearn;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,6 +24,10 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVRelation;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -396,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DatabaseOperate.class);
+                intent.putExtra("User", User);
                 startActivity(intent);
             }
         });
@@ -406,7 +413,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         MyCoins.setText(Coins);
 
     }
-
 
     public void initOverlay() {
         OverlayPosition = new double[5][2];
@@ -1120,12 +1126,54 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 overridePendingTransition(0, 0);
                 break;
             case R.id.pe:
-                Intent intent4 = new Intent(MainActivity.this, Evolve.class);
-                intent4.putExtra("PMName", "伊布");
-                intent4.putExtra("PMStone", "火之石");
-                intent4.putExtra("S-PMName", "火精灵");
-                intent4.putExtra("User", User);
-                startActivity(intent4);
+                AVObject avObject = AVObject.createWithoutData("Users", User);
+                AVRelation<AVObject> relation = avObject.getRelation("OwnPet");
+                AVQuery<AVObject> query = relation.getQuery();
+                query.whereEqualTo("Name", "伊布");
+                query.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> list, AVException e) {
+                        if (list.size() == 0) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).setTitle("错误")
+                                    .setMessage("请先拥有伊布和火之石")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            AVObject avObject1 = AVObject.createWithoutData("Users", User);
+                            AVRelation<AVObject> relation1 = avObject1.getRelation("OwnItem");
+                            AVQuery<AVObject> query1 = relation1.getQuery();
+                            query1.whereEqualTo("Name", "火之石");
+                            query1.findInBackground(new FindCallback<AVObject>() {
+                                @Override
+                                public void done(List<AVObject> list, AVException e) {
+                                    if (list.size() == 0) {
+                                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).setTitle("错误")
+                                                .setMessage("请先拥有伊布和火之石")
+                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+                                        Intent intent4 = new Intent(MainActivity.this, Evolve.class);
+                                        intent4.putExtra("PMName", "伊布");
+                                        intent4.putExtra("PMStone", "火之石");
+                                        intent4.putExtra("S-PMName", "火精灵");
+                                        intent4.putExtra("User", User);
+                                        startActivity(intent4);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
                 break;
         }
     }
