@@ -28,6 +28,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -64,6 +65,7 @@ import static android.animation.ObjectAnimator.ofFloat;
  * Noted by Gama on 15/5/17 (Ashamed Of Myself).
  * Noted by Gama on 18/5/17 (Result: 1:C-Bag 2:C-PokeMonBall 3:P-Learn 4:P-Evolve)
  * Noted by Gama on 25/5/17 (<<Attention>>)
+ * Noted by Gama on 3/6/17 (Finally)
  */
 
 public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarkerClickListener, View.OnClickListener, View.OnTouchListener, BaiduMap.OnMapClickListener {
@@ -407,11 +409,13 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
             }
         });
         MyCoins = (TextView) findViewById(R.id.myCoin);
-        SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
-        int Number = preferences.getInt("Coins", 0);
-        String Coins = "      " + String.valueOf(Number) + "  ";
-        MyCoins.setText(Coins);
-
+        AVQuery<AVObject> query = new AVQuery<>("Users");
+        query.getInBackground(User, new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                MyCoins.setText(String.valueOf(avObject.getInt("Coin")));
+            }
+        });
     }
 
     public void initOverlay() {
@@ -1109,8 +1113,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
                 mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
                 break;
             case R.id.compass:
-                mBaiduMap
-                        .setMyLocationConfigeration(new MyLocationConfiguration(
+                mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                                 MyLocationConfiguration.LocationMode.COMPASS, true, null));
                 break;
             case R.id.following:
@@ -1546,7 +1549,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
     @Override
     protected void onDestroy() {
-        //退出时销毁定位
         if (mLocClient != null) {
             mLocClient.stop();
         }
@@ -1577,6 +1579,3 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         super.onStop();
     }
 }
-
-
-

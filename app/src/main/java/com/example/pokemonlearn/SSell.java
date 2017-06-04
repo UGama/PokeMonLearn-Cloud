@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -119,6 +118,14 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
 
         Intent intent0 = getIntent();
         User = intent0.getStringExtra("User");
+
+        AVQuery<AVObject> query0 = new AVQuery<>("Users");
+        query0.getInBackground(User, new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                MyCoin = avObject.getInt("Coin");
+            }
+        });
 
         ownItems = new ArrayList<>();
         AVObject user = AVObject.createWithoutData("Users", User);
@@ -428,12 +435,12 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                 }
                 break;
             case R.id.d_confirm:
-                number = Integer.valueOf(editText.getText().toString());
-                if (number < 0 || number > NumberInBag || editText.getText().toString().equals("")) {
+                if (editText.getText().toString().equals("")) {
+                    Dialog_Show();
+                } else if (Integer.valueOf(editText.getText().toString()) <= 0) {
                     Dialog_Show();
                 } else {
-                    SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
-                    MyCoin = preferences.getInt("Coins", 0);
+                    number = Integer.valueOf(editText.getText().toString());
                     String item_name = Item_Name.getText().toString();
                     switch (PagesCount) {
                         case 1:
@@ -443,10 +450,15 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
-                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
                                     MyCoin += number * Price / 2;
-                                    editor.putInt("Coins", MyCoin);
-                                    editor.apply();
+                                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                                    query.getInBackground(User, new GetCallback<AVObject>() {
+                                        @Override
+                                        public void done(AVObject avObject, AVException e) {
+                                            avObject.put("Coin", MyCoin);
+                                            avObject.saveInBackground();
+                                        }
+                                    });
                                 }
                             });
                             break;
@@ -457,10 +469,15 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
-                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
                                     MyCoin += number * Price / 2;
-                                    editor.putInt("Coins", MyCoin);
-                                    editor.apply();
+                                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                                    query.getInBackground(User, new GetCallback<AVObject>() {
+                                        @Override
+                                        public void done(AVObject avObject, AVException e) {
+                                            avObject.put("Coin", MyCoin);
+                                            avObject.saveInBackground();
+                                        }
+                                    });
                                 }
                             });
                             break;
@@ -471,10 +488,15 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
-                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
                                     MyCoin += number * Price / 2;
-                                    editor.putInt("Coins", MyCoin);
-                                    editor.apply();
+                                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                                    query.getInBackground(User, new GetCallback<AVObject>() {
+                                        @Override
+                                        public void done(AVObject avObject, AVException e) {
+                                            avObject.put("Coin", MyCoin);
+                                            avObject.saveInBackground();
+                                        }
+                                    });
                                 }
                             });
                             break;
@@ -485,10 +507,15 @@ public class SSell extends AppCompatActivity implements View.OnClickListener, Vi
                                 @Override
                                 public void done(AVObject avObject, AVException e) {
                                     Price = avObject.getInt("Price");
-                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
                                     MyCoin += number * Price / 2;
-                                    editor.putInt("Coins", MyCoin);
-                                    editor.apply();
+                                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                                    query.getInBackground(User, new GetCallback<AVObject>() {
+                                        @Override
+                                        public void done(AVObject avObject, AVException e) {
+                                            avObject.put("Coin", MyCoin);
+                                            avObject.saveInBackground();
+                                        }
+                                    });
                                 }
                             });
                             break;

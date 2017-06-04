@@ -74,6 +74,16 @@
         app:layout_marginTopPercent="2%"
         />
 
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="<如果地图无法加载请手动添加定位权限。>"
+        android:layout_below="@+id/register"
+        app:layout_marginTopPercent="13%"
+        android:textColor="#ffffff"
+        />
+
     <ImageView
         android:id="@+id/transfer1"
         android:background="@drawable/transfer"

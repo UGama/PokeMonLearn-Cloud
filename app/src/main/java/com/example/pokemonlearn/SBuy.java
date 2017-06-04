@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -119,6 +118,8 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
 
     private PercentRelativeLayout Support;
     private ProgressBar progressBar;
+
+    private int MyCoin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -514,60 +515,71 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                     MessageCount = 1;
                 } else if (MessageCount == 1) {
                     if (PagesCount == 5) {
-                        SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
-                        int MyCoin = preferences.getInt("Coins", 0);
-                        if (MyCoin >= Price) {
-                            MyCoin -= Price;
-                            SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                            editor.putInt("Coins", MyCoin);
-                            editor.apply();
-                            AVQuery<AVObject> query5 = new AVQuery<>("Scene");
-                            query5.whereEqualTo("Number", Integer.valueOf(ChoseName));
-                            query5.getFirstInBackground(new GetCallback<AVObject>() {
-                                @Override
-                                public void done(AVObject avObject, AVException e) {
-                                    AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("_File");
-                                    avObjectAVQuery.whereEqualTo("name", avObject.getString("ImageName") + ".png");
-                                    avObjectAVQuery.getFirstInBackground(new GetCallback<AVObject>() {
+                        AVQuery<AVObject> query0 = new AVQuery<>("Users");
+                        query0.getInBackground(User, new GetCallback<AVObject>() {
+                            @Override
+                            public void done(AVObject avObject, AVException e) {
+                                MyCoin = avObject.getInt("Coin");
+                                if (MyCoin >= Price) {
+                                    MyCoin -= Price;
+                                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                                    query.getInBackground(User, new GetCallback<AVObject>() {
                                         @Override
                                         public void done(AVObject avObject, AVException e) {
-                                            final String Url = avObject.getString("url");
-                                            AVQuery<AVObject> query = new AVQuery<>("Users");
-                                            query.getInBackground(User, new GetCallback<AVObject>() {
+                                            avObject.put("Coin", MyCoin);
+                                            avObject.saveInBackground();
+                                        }
+                                    });
+                                    AVQuery<AVObject> query5 = new AVQuery<>("Scene");
+                                    query5.whereEqualTo("Number", Integer.valueOf(ChoseName));
+                                    query5.getFirstInBackground(new GetCallback<AVObject>() {
+                                        @Override
+                                        public void done(AVObject avObject, AVException e) {
+                                            AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("_File");
+                                            avObjectAVQuery.whereEqualTo("name", avObject.getString("ImageName") + ".png");
+                                            avObjectAVQuery.getFirstInBackground(new GetCallback<AVObject>() {
                                                 @Override
                                                 public void done(AVObject avObject, AVException e) {
-                                                    avObject.put("Scene", Url);
-                                                    avObject.saveInBackground();
+                                                    final String Url = avObject.getString("url");
+                                                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                                                    query.getInBackground(User, new GetCallback<AVObject>() {
+                                                        @Override
+                                                        public void done(AVObject avObject, AVException e) {
+                                                            avObject.put("Scene", Url);
+                                                            avObject.saveInBackground();
+                                                        }
+                                                    });
                                                 }
                                             });
                                         }
                                     });
+                                    AlertDialog alertDialog = new AlertDialog.Builder(SBuy.this).setTitle("恭喜")
+                                            .setMessage("购买成功！")
+                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    MessageCount = 0;
+                                                    Buy.setBackgroundResource(R.drawable.s_buy);
+                                                    SBuy_Message.setText("");
+                                                    FirstTouch = true;
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    AlertDialog alertDialog = new AlertDialog.Builder(SBuy.this).setTitle("抱歉")
+                                            .setMessage("余额不足请充值。")
+                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
                                 }
-                            });
-                            AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("恭喜")
-                                    .setMessage("购买成功！")
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            MessageCount = 0;
-                                            Buy.setBackgroundResource(R.drawable.s_buy);
-                                            SBuy_Message.setText("");
-                                            FirstTouch = true;
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("抱歉")
-                                    .setMessage("余额不足请充值。")
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .show();
-                        }
+                            }
+                        });
+
                     } else {
                         Black.setVisibility(View.VISIBLE);
                         Dialog.setVisibility(View.VISIBLE);
@@ -587,171 +599,183 @@ public class SBuy extends AppCompatActivity implements View.OnClickListener, Vie
                 }
                 break;
             case R.id.d_confirm:
-                number = Integer.valueOf(editText.getText().toString());
-                if (number <= 0 || editText.getText().toString().equals("")) {
+                if (editText.getText().toString().equals("")) {
+                    Dialog_Show();
+                } else if (Integer.valueOf(editText.getText().toString()) <= 0) {
                     Dialog_Show();
                 } else {
-                    SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
-                    int MyCoin = preferences.getInt("Coins", 0);
-                    if (MyCoin >= Price * number) {
-                        MyCoin -= Price * number;
-                        SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                        editor.putInt("Coins", MyCoin);
-                        editor.apply();
-                        String item_name = Item_Name.getText().toString();
-                        boolean isHaven = false;
-                        for (final OwnItem ownItem : ownItems) {
-                            if (ownItem.getName().equals(item_name)) {
-                                isHaven = true;
-                                final AVObject User1 = AVObject.createWithoutData("Users", User);
-                                AVRelation<AVObject> relation = User1.getRelation("OwnItem");
-                                AVQuery<AVObject> query = relation.getQuery();
-                                query.whereEqualTo("Name", item_name);
-                                query.getFirstInBackground(new GetCallback<AVObject>() {
+                    number = Integer.valueOf(editText.getText().toString());
+                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                    query.getInBackground(User, new GetCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject avObject, AVException e) {
+                            MyCoin = avObject.getInt("Coin");
+                            if (MyCoin >= Price * number) {
+                                MyCoin -= Price * number;
+                                AVQuery<AVObject> query2 = new AVQuery<>("Users");
+                                query2.getInBackground(User, new GetCallback<AVObject>() {
                                     @Override
                                     public void done(AVObject avObject, AVException e) {
-                                        avObject.put("Number", ownItem.getNumber() + number);
+                                        avObject.put("Coin", MyCoin);
                                         avObject.saveInBackground();
                                     }
                                 });
-                                break;
+                                String item_name = Item_Name.getText().toString();
+                                boolean isHaven = false;
+                                for (final OwnItem ownItem : ownItems) {
+                                    if (ownItem.getName().equals(item_name)) {
+                                        isHaven = true;
+                                        final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                        AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                        AVQuery<AVObject> query1 = relation.getQuery();
+                                        query1.whereEqualTo("Name", item_name);
+                                        query1.getFirstInBackground(new GetCallback<AVObject>() {
+                                            @Override
+                                            public void done(AVObject avObject, AVException e) {
+                                                avObject.put("Number", ownItem.getNumber() + number);
+                                                avObject.saveInBackground();
+                                            }
+                                        });
+                                        break;
+                                    }
+                                }
+                                if (!isHaven) {
+                                    switch (PagesCount) {
+                                        case 1:
+                                            AVQuery<AVObject> query = new AVQuery<>("PokeMonBall");
+                                            query.whereEqualTo("Name", Item_Name.getText().toString());
+                                            query.getFirstInBackground(new GetCallback<AVObject>() {
+                                                @Override
+                                                public void done(AVObject avObject, AVException e) {
+                                                    final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                                    final AVObject avObject1 = new AVObject("OwnItem");
+                                                    avObject1.put("Name", avObject.getString("Name"));
+                                                    avObject1.put("Number", number);
+                                                    avObject1.put("ImageName", avObject.getString("ImageName"));
+                                                    avObject1.put("Dex", avObject.getInt("Number"));
+                                                    avObject1.put("Type", 1);
+
+                                                    AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                        @Override
+                                                        public void done(AVException e) {
+                                                            AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                            relation.add(avObject1);
+                                                            User1.saveInBackground();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            break;
+                                        case 2:
+                                            AVQuery<AVObject> query3 = new AVQuery<>("PokeMonTool");
+                                            query3.whereEqualTo("Name", Item_Name.getText().toString());
+                                            query3.getFirstInBackground(new GetCallback<AVObject>() {
+                                                @Override
+                                                public void done(AVObject avObject, AVException e) {
+                                                    final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                                    final AVObject avObject1 = new AVObject("OwnItem");
+                                                    avObject1.put("Name", avObject.getString("Name"));
+                                                    avObject1.put("Number", number);
+                                                    avObject1.put("ImageName", avObject.getString("ImageName"));
+                                                    avObject1.put("Dex", avObject.getInt("Number"));
+                                                    avObject1.put("Type", 2);
+
+                                                    AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                        @Override
+                                                        public void done(AVException e) {
+                                                            AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                            relation.add(avObject1);
+                                                            User1.saveInBackground();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            break;
+                                        case 3:
+                                            AVQuery<AVObject> query4 = new AVQuery<>("PokeMonStone");
+                                            query4.whereEqualTo("Name", Item_Name.getText().toString());
+                                            query4.getFirstInBackground(new GetCallback<AVObject>() {
+                                                @Override
+                                                public void done(AVObject avObject, AVException e) {
+                                                    final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                                    final AVObject avObject1 = new AVObject("OwnItem");
+                                                    avObject1.put("Name", avObject.getString("Name"));
+                                                    avObject1.put("Number", number);
+                                                    avObject1.put("ImageName", avObject.getString("ImageName"));
+                                                    avObject1.put("Dex", avObject.getInt("Number"));
+                                                    avObject1.put("Type", 3);
+
+                                                    AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                        @Override
+                                                        public void done(AVException e) {
+                                                            AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                            relation.add(avObject1);
+                                                            User1.saveInBackground();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            break;
+                                        case 4:
+                                            AVQuery<AVObject> query5 = new AVQuery<>("PokeMonBook");
+                                            query5.whereEqualTo("Name", Item_Name.getText().toString());
+                                            query5.getFirstInBackground(new GetCallback<AVObject>() {
+                                                @Override
+                                                public void done(AVObject avObject, AVException e) {
+                                                    final AVObject User1 = AVObject.createWithoutData("Users", User);
+                                                    final AVObject avObject1 = new AVObject("OwnItem");
+                                                    avObject1.put("Name", avObject.getString("Name"));
+                                                    avObject1.put("Number", number);
+                                                    avObject1.put("ImageName", avObject.getString("ImageName"));
+                                                    avObject1.put("Dex", avObject.getInt("Number"));
+                                                    avObject1.put("Type", 4);
+
+                                                    AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
+                                                        @Override
+                                                        public void done(AVException e) {
+                                                            AVRelation<AVObject> relation = User1.getRelation("OwnItem");
+                                                            relation.add(avObject1);
+                                                            User1.saveInBackground();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            break;
+                                    }
+                                }
+                                AlertDialog alertDialog = new AlertDialog.Builder(SBuy.this).setTitle("恭喜")
+                                        .setMessage("购买成功！")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                Dialog.setVisibility(View.GONE);
+                                                Black.setVisibility(View.GONE);
+                                                editText.setText("");
+                                            }
+                                        })
+                                        .show();
+                                MessageCount = 0;
+                                Buy.setBackgroundResource(R.drawable.s_buy);
+                                SBuy_Message.setText("");
+                                FirstTouch = true;
+                            } else {
+                                AlertDialog alertDialog = new AlertDialog.Builder(SBuy.this).setTitle("抱歉")
+                                        .setMessage("余额不足请充值。")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+                                MessageCount = 0;
+                                Buy.setBackgroundResource(R.drawable.s_buy);
+                                SBuy_Message.setText("");
+                                FirstTouch = true;
                             }
                         }
-                        if (!isHaven) {
-                            switch (PagesCount) {
-                                case 1:
-                                    AVQuery<AVObject> query = new AVQuery<>("PokeMonBall");
-                                    query.whereEqualTo("Name", Item_Name.getText().toString());
-                                    query.getFirstInBackground(new GetCallback<AVObject>() {
-                                        @Override
-                                        public void done(AVObject avObject, AVException e) {
-                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
-                                            final AVObject avObject1 = new AVObject("OwnItem");
-                                            avObject1.put("Name", avObject.getString("Name"));
-                                            avObject1.put("Number", number);
-                                            avObject1.put("ImageName", avObject.getString("ImageName"));
-                                            avObject1.put("Dex", avObject.getInt("Number"));
-                                            avObject1.put("Type", 1);
-
-                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
-                                                @Override
-                                                public void done(AVException e) {
-                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
-                                                    relation.add(avObject1);
-                                                    User1.saveInBackground();
-                                                }
-                                            });
-                                        }
-                                    });
-                                    break;
-                                case 2:
-                                    AVQuery<AVObject> query2 = new AVQuery<>("PokeMonTool");
-                                    query2.whereEqualTo("Name", Item_Name.getText().toString());
-                                    query2.getFirstInBackground(new GetCallback<AVObject>() {
-                                        @Override
-                                        public void done(AVObject avObject, AVException e) {
-                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
-                                            final AVObject avObject1 = new AVObject("OwnItem");
-                                            avObject1.put("Name", avObject.getString("Name"));
-                                            avObject1.put("Number", number);
-                                            avObject1.put("ImageName", avObject.getString("ImageName"));
-                                            avObject1.put("Dex", avObject.getInt("Number"));
-                                            avObject1.put("Type", 2);
-
-                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
-                                                @Override
-                                                public void done(AVException e) {
-                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
-                                                    relation.add(avObject1);
-                                                    User1.saveInBackground();
-                                                }
-                                            });
-                                        }
-                                    });
-                                    break;
-                                case 3:
-                                    AVQuery<AVObject> query3 = new AVQuery<>("PokeMonStone");
-                                    query3.whereEqualTo("Name", Item_Name.getText().toString());
-                                    query3.getFirstInBackground(new GetCallback<AVObject>() {
-                                        @Override
-                                        public void done(AVObject avObject, AVException e) {
-                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
-                                            final AVObject avObject1 = new AVObject("OwnItem");
-                                            avObject1.put("Name", avObject.getString("Name"));
-                                            avObject1.put("Number", number);
-                                            avObject1.put("ImageName", avObject.getString("ImageName"));
-                                            avObject1.put("Dex", avObject.getInt("Number"));
-                                            avObject1.put("Type", 3);
-
-                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
-                                                @Override
-                                                public void done(AVException e) {
-                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
-                                                    relation.add(avObject1);
-                                                    User1.saveInBackground();
-                                                }
-                                            });
-                                        }
-                                    });
-                                    break;
-                                case 4:
-                                    AVQuery<AVObject> query4 = new AVQuery<>("PokeMonBook");
-                                    query4.whereEqualTo("Name", Item_Name.getText().toString());
-                                    query4.getFirstInBackground(new GetCallback<AVObject>() {
-                                        @Override
-                                        public void done(AVObject avObject, AVException e) {
-                                            final AVObject User1 = AVObject.createWithoutData("Users", User);
-                                            final AVObject avObject1 = new AVObject("OwnItem");
-                                            avObject1.put("Name", avObject.getString("Name"));
-                                            avObject1.put("Number", number);
-                                            avObject1.put("ImageName", avObject.getString("ImageName"));
-                                            avObject1.put("Dex", avObject.getInt("Number"));
-                                            avObject1.put("Type", 4);
-
-                                            AVObject.saveAllInBackground(Arrays.asList(avObject1), new SaveCallback() {
-                                                @Override
-                                                public void done(AVException e) {
-                                                    AVRelation<AVObject> relation = User1.getRelation("OwnItem");
-                                                    relation.add(avObject1);
-                                                    User1.saveInBackground();
-                                                }
-                                            });
-                                        }
-                                    });
-                                    break;
-                            }
-                        }
-                        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("恭喜")
-                                .setMessage("购买成功！")
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        Dialog.setVisibility(View.GONE);
-                                        Black.setVisibility(View.GONE);
-                                        editText.setText("");
-                                    }
-                                })
-                                .show();
-                        MessageCount = 0;
-                        Buy.setBackgroundResource(R.drawable.s_buy);
-                        SBuy_Message.setText("");
-                        FirstTouch = true;
-                    } else {
-                        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("抱歉")
-                                .setMessage("余额不足请充值。")
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                        MessageCount = 0;
-                        Buy.setBackgroundResource(R.drawable.s_buy);
-                        SBuy_Message.setText("");
-                        FirstTouch = true;
-                    }
+                    });
                 }
                 break;
             case R.id.d_cancel:

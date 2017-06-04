@@ -2,6 +2,7 @@ package com.example.pokemonlearn;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -92,6 +93,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Register = (Button) findViewById(R.id.register);
         Register.setOnClickListener(this);
 
+        SharedPreferences preferences = getSharedPreferences("UserName", MODE_PRIVATE);
+        String name = preferences.getString("UserName", "");
+        UserName.setText(name);
     }
 
     public void DataInit() {
@@ -262,6 +266,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 intent.putExtra("User", list.get(0).getObjectId());
                                 startActivity(intent);
                                 overridePendingTransition(0, 0);
+                                SharedPreferences.Editor editor = getSharedPreferences("UserName", MODE_PRIVATE).edit();
+                                editor.putString("UserName", Name);
+                                editor.apply();
                                 finish();
                             } else {
                                 AlertDialog alertDialog = new AlertDialog.Builder(Login.this).setTitle("错误")
